@@ -1,34 +1,49 @@
-import { google } from 'googleapis'
-import { useEffect } from 'react';
-import { GoogleSpreadsheet } from 'google-spreadsheet'
-import credentials from '../../credentialsDrive.json'
+const { GoogleSpreadsheet } = require('google-spreadsheet');
+const credentials = require('../../credentialsDrive.json');
 
 
-export async function getServerSideProps({query}) {
-    const {id} = query
-    const doc = new GoogleSpreadsheet(credentials.sheet_id)
-        await doc.useServiceAccountAuth({
-            client_email: credentials.client_email,
-            private_key: credentials.private_key
+export default function Post() {
+    
+    function printStock(stock) {
+        return (
+          <tr>
+              <td>{stock.DATA}</td>
+              <td>{stock.COMPANY}</td>
+              <td>{stock.TICKER}</td>
+              <td>{stock.PROFIT_PERCENT}</td>
+              <td>{stock.PROFIT_ABSOLUTE}</td>
+              <td>{stock.BUY_PRICE}</td>
+              <td>{stock.SHARES}</td>
+              <td>{stock.INVESTED_VALUE}</td>
+              <td>{stock.CURRENT}</td>
+          </tr>
+        )
+      }
+      
+      async function getSpreadsheet(id) {
+          const doc = new GoogleSpreadsheet(credentials.sheet_id)
+          await doc.useServiceAccountAuth({
+          client_email: credentials.client_email,
+          private_key: credentials.private_key
           });
-        await doc.loadInfo(); // loads document properties and worksheets
+          await doc.loadInfo(); // loads document properties and worksheets
           console.log(doc.title);
-          const sheets = doc.sheetsByIndex; // or use doc.sheetsById[id] or doc.sheetsByTitle[title]         
-          
-          sheets.map((sheet) => {
-            if (sheet.title === id) {
-                let workingSheet = sheet
-                console.log(sheet.title)
-            }
-          } )
-    return {
+          const sheet = await doc.sheetsByTitle[`${id}`]
+          const rows = await sheet.getRows({
+          offset: 0,
+          limit: 8,
+          })
+          rows.forEach(row => {
+          printStock(row)
+          })
+          return rows
+      }
+      
+      getSpreadsheet(1).then(sheet => {
+        printStock(sheet)
+    });
+      
 
-}
-}
-
-export default function Post({workingSheet}) {
-
-    console.log()
 
     return (
         <div>
@@ -48,8 +63,9 @@ export default function Post({workingSheet}) {
                     <th>Saldo Atual </th>
                     </tr>
                 </thead>
+                <tbody>
+                </tbody>
             </table>
-            {/* <button onClick={createNewSheet(sheets)}></button> */}
         </div>
     )
 }
