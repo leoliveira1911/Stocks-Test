@@ -33,3 +33,4 @@ yarn-error.log*
 
 #credentials
 credentials.json
+credentialsDrive.json
