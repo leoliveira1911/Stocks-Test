@@ -29,9 +29,9 @@ const doc = new GoogleSpreadsheet(credentials.sheet_id)
     offset: 0,
     limit: 8,
   })
-  rows.forEach(row => {
+   rows.forEach(row => {
     printStock(row)
-  })
+  }) 
   return rows
 }
 
