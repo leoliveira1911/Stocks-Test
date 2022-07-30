@@ -22,6 +22,15 @@ export async function getServerSideProps({ query }) {
 
 }
 
+export function rowCount({rows}) {
+    let rowCount = 0
+    rows.map((el) => {
+        if (el[0] != "" && el[0] != 'DATA'){rowCount = rowCount + 1}
+
+}) 
+return rowCount
+}
+
 export default function Post({ rows, sheets }) {
 
 
