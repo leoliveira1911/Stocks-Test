@@ -8,7 +8,7 @@ export function AppProvider(props) {
         <AppContext.Provider value={{
             nome: "Teste Context API"
         }} >
-
+            {props.children}
 
         </AppContext.Provider>
     )

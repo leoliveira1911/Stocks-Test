@@ -1,5 +1,8 @@
 import { google } from 'googleapis'
-import { setTimeout } from 'timers/promises';
+import { useRouter } from 'next/router';
+import {FormEvent, useState } from 'react'
+
+
 
 export async function getServerSideProps({ query }) {
 
@@ -23,7 +26,53 @@ export async function getServerSideProps({ query }) {
 
 }
 
+
+
 export default function Post({ rows }) {
+    const router = useRouter()
+    const [date, setDate] = useState('')
+    const [company, setCompany] = useState('')
+    const [ticker, setTicker] = useState('')
+    const [buyPrice, setBuyPrice] = useState('')
+    const [shares, setShares] = useState('')
+
+    const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        //DATA	COMPANY	TICKER	PROFIT_PERCENT	PROFIT_ABSOLUTE	PRICE	BUY_PRICE	SHARES	INVESTED_VALUE	CURRENT
+        const form = {
+            date,
+            company,
+            ticker,
+            profitPercent: `=(G${calcValues(rows).rowCount + 2}-F${calcValues(rows).rowCount + 2})/G${calcValues(rows).rowCount + 2}*(-1)`,
+            profitAbsolute: `=(F${calcValues(rows).rowCount + 2}-G${calcValues(rows).rowCount + 2})*H${calcValues(rows).rowCount + 2}`,
+            price: `=GOOGLEFINANCE(C${calcValues(rows).rowCount + 2})`,
+            buyPrice,
+            shares,
+            investedValue: `=H${calcValues(rows).rowCount + 2}*G${calcValues(rows).rowCount + 2}`,
+            current: `=H${calcValues(rows).rowCount + 2}*F${calcValues(rows).rowCount + 2}`
+        }
+
+        const response = await fetch('/api/submit' , {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            } ,
+            body: JSON.stringify(form)
+        })
+
+        const content = await response.json()
+
+        alert(content)
+        
+        setDate('')
+        setCompany('')
+        setTicker('')
+        setBuyPrice('')
+        setShares('')
+        
+        router.reload()
+    }
 
 
     function calcValues(data) {
@@ -33,12 +82,12 @@ export default function Post({ rows }) {
         data.map((el) => {
             if (el[0] != "" && el[0] != 'DATA') {
                 let stringInvestedBeforeTreat = el[8]
-                let stringInvestedAfterTreat = stringInvestedBeforeTreat.replace('R$', '').replace(',', '.').replace(' ', '')
+                let stringInvestedAfterTreat = stringInvestedBeforeTreat.replace('R$', '').replace('.', '').replace(',', '.').replace(' ', '')
                 let valueInvested = parseFloat(stringInvestedAfterTreat)
                 invested = invested + valueInvested
 
                 let stringCurrentBeforeTreat = el[9]
-                let stringCurrentAfterTreat = stringCurrentBeforeTreat.replace('R$', '').replace(',', '.').replace(' ', '')
+                let stringCurrentAfterTreat = stringCurrentBeforeTreat.replace('R$', '').replace('.', '').replace(',', '.').replace(' ', '')
                 let valueCurrent = parseFloat(stringCurrentAfterTreat)
                 current = current + valueCurrent
 
@@ -80,6 +129,7 @@ export default function Post({ rows }) {
     return (
         <div>
             <h1>Shares</h1>
+            <h2>Valor da carteira : R$ {calcValues(rows).current}</h2>
             <table>
                 <thead>
                     <tr>
@@ -102,7 +152,7 @@ export default function Post({ rows }) {
                         <td></td>
                         <td></td>
                         <td>{calcValues(rows).profitPercent}%</td>
-                        <td>{calcValues(rows).absolute}</td>
+                        <td>R$ {calcValues(rows).absolute}</td>
                         <td></td>
                         <td></td>
                         <td></td>
@@ -112,8 +162,36 @@ export default function Post({ rows }) {
                 </tbody>
             </table>
             <div>
-                <h1>Contagem de ações: {calcValues(rows).rowCount} </h1>
             </div>
+            <div>
+            <h3 style={{marginTop: '50px'}} >Adicionar nova ação:</h3>
+            <form onSubmit={handleSubmit}>
+                <div>
+                    <label htmlFor='date'> Data de compra</label>
+                    <input required value={date} onChange={e => setDate(e.target.value)} type="text" name="date" id="date" />
+                </div>
+                <div>
+                    <label htmlFor='company'> Empresa</label>
+                    <input required value={company} onChange={e => setCompany(e.target.value)} type="text" name="company" id="company" />
+                </div>
+                <div>
+                    <label htmlFor='ticker'> Ticker </label>
+                    <input required value={ticker} onChange={e => setTicker(e.target.value)} type="text" name="ticker" id="ticker" />
+                </div>
+                <div>
+                    <label htmlFor='buyPrice'> Preço de compra </label>
+                    <input required value={buyPrice} onChange={e => setBuyPrice(e.target.value)} type="text" name="buyPrice" id="buyPrice" />
+                </div>
+                <div>
+                    <label htmlFor='shares'> Número de ações </label>
+                    <input required value={shares} onChange={e => setShares(e.target.value)} type="text" name="shares" id="shares" />
+                </div>
+                <div>
+                    <button type='submit'>Enviar</button>
+                    
+                </div>
+            </form>
+        </div>
         </div>
     )
 }
