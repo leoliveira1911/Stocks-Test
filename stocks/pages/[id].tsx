@@ -36,6 +36,16 @@ export default function Post({ rows }) {
     const [buyPrice, setBuyPrice] = useState('')
     const [shares, setShares] = useState('')
 
+   const refreshData = () => {
+        router.replace(router.asPath);
+      }
+    
+  
+  
+  
+  
+
+
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         //DATA	COMPANY	TICKER	PROFIT_PERCENT	PROFIT_ABSOLUTE	PRICE	BUY_PRICE	SHARES	INVESTED_VALUE	CURRENT
@@ -71,8 +81,10 @@ export default function Post({ rows }) {
         setBuyPrice('')
         setShares('')
         
-        router.reload()
+        refreshData()
     }
+
+
 
 
     function calcValues(data) {
