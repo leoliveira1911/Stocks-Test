@@ -19,12 +19,8 @@ export default async function handler(
     req: NextApiRequest,
     res: NextApiResponse
 ) {
-    if(req.method !== 'POST') {
-        return res.status(405).send({message:'Only POST requests are allowed'})
-    }
-
+    if(req.method === 'POST') {
     const body = req.body as SheetForm
-
     try {
 
         const auth = new google.auth.GoogleAuth({
@@ -58,6 +54,28 @@ export default async function handler(
         console.error(e)
         return res.status(500).send({message: e.message})
     }
+    } else if (req.method === 'GET') {
+        try {
 
-
+            const auth = new google.auth.GoogleAuth({
+                keyFile: "credentialsDrive.json",
+                scopes: "https://www.googleapis.com/auth/spreadsheets"
+            });
+            const sheets = google.sheets({ version: 'v4', auth })
+            const  id  = 1
+            const range = `${id}!A:J`
+            const response = await sheets.spreadsheets.values.get({
+                spreadsheetId: process.env.SHEET_ID,
+                range
+            })
+            const rows = response.data.values
+            return res.status(200).json({
+                data: rows
+            })
+        }
+     catch(e) {
+        console.error(e)
+        return res.status(500).send({message: e.message})
+    }
+}
 }

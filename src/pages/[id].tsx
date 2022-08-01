@@ -1,6 +1,7 @@
 import { google } from 'googleapis'
 import { useRouter } from 'next/router';
-import {FormEvent, useState } from 'react'
+import { FormEvent, useEffect, useState } from 'react'
+import { setInterval } from 'timers';
 
 
 
@@ -28,22 +29,18 @@ export async function getServerSideProps({ query }) {
 
 
 
-export default function Post({ rows }) {
+export default function Post({ rows}) {
     const router = useRouter()
     const [date, setDate] = useState('')
     const [company, setCompany] = useState('')
     const [ticker, setTicker] = useState('')
     const [buyPrice, setBuyPrice] = useState('')
     const [shares, setShares] = useState('')
+    const [stocks, setStocks] = useState(rows)
 
-   const refreshData = () => {
+    const refreshData = () => {
         router.replace(router.asPath);
-      }
-    
-  
-  
-  
-  
+    }
 
 
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -62,30 +59,45 @@ export default function Post({ rows }) {
             current: `=H${calcValues(rows).rowCount + 2}*F${calcValues(rows).rowCount + 2}`
         }
 
-        const response = await fetch('/api/submit' , {
+        const response = await fetch('/api/submit', {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
-            } ,
+            },
             body: JSON.stringify(form)
         })
 
         const content = await response.json()
 
         alert(content)
-        
+
         setDate('')
         setCompany('')
         setTicker('')
         setBuyPrice('')
         setShares('')
-        
+
         refreshData()
     }
+    
+    const handleGet = async () => {
+        
+        const response = await fetch('/api/submit', {
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+        })
 
-
-
+        const content = await response.json()
+        const stock = await content.data
+        
+        setStocks(stock)
+    }
+    
+    setInterval(() => { handleGet() }, 120000)
 
     function calcValues(data) {
         let invested = 0
@@ -111,8 +123,8 @@ export default function Post({ rows }) {
         let absolute = (current - invested).toFixed(2)
         let values = {
             profitPercent,
-            invested: invested.toFixed(2) ,
-            current: current.toFixed(2) ,
+            invested: invested.toFixed(2),
+            current: current.toFixed(2),
             absolute,
             rowCount
         }
@@ -138,10 +150,14 @@ export default function Post({ rows }) {
                 )
         })
     }
+
+
+
+
     return (
         <div>
             <h1>Shares</h1>
-            <h2>Valor da carteira : R$ {calcValues(rows).current}</h2>
+            <h2>Valor da carteira : R$ {calcValues(stocks).current}</h2>
             <table>
                 <thead>
                     <tr>
@@ -158,52 +174,53 @@ export default function Post({ rows }) {
                     </tr>
                 </thead>
                 <tbody>
-                    {renderData(rows)}
+                    {renderData(stocks)}
                     <tr>
                         <td>Total</td>
                         <td></td>
                         <td></td>
-                        <td>{calcValues(rows).profitPercent}%</td>
-                        <td>R$ {calcValues(rows).absolute}</td>
+                        <td>{calcValues(stocks).profitPercent}%</td>
+                        <td>R$ {calcValues(stocks).absolute}</td>
                         <td></td>
                         <td></td>
                         <td></td>
-                        <td>{calcValues(rows).invested}</td>
-                        <td>{calcValues(rows).current}</td>
+                        <td>{calcValues(stocks).invested}</td>
+                        <td>{calcValues(stocks).current}</td>
                     </tr>
                 </tbody>
             </table>
+            <button onClick={handleGet}>Atualizar Valores</button>
             <div>
             </div>
             <div>
-            <h3 style={{marginTop: '50px'}} >Adicionar nova ação:</h3>
-            <form onSubmit={handleSubmit}>
-                <div>
-                    <label htmlFor='date'> Data de compra</label>
-                    <input required value={date} onChange={e => setDate(e.target.value)} type="text" name="date" id="date" />
-                </div>
-                <div>
-                    <label htmlFor='company'> Empresa</label>
-                    <input required value={company} onChange={e => setCompany(e.target.value)} type="text" name="company" id="company" />
-                </div>
-                <div>
-                    <label htmlFor='ticker'> Ticker </label>
-                    <input required value={ticker} onChange={e => setTicker(e.target.value)} type="text" name="ticker" id="ticker" />
-                </div>
-                <div>
-                    <label htmlFor='buyPrice'> Preço de compra </label>
-                    <input required value={buyPrice} onChange={e => setBuyPrice(e.target.value)} type="text" name="buyPrice" id="buyPrice" />
-                </div>
-                <div>
-                    <label htmlFor='shares'> Número de ações </label>
-                    <input required value={shares} onChange={e => setShares(e.target.value)} type="text" name="shares" id="shares" />
-                </div>
-                <div>
-                    <button type='submit'>Enviar</button>
-                    
-                </div>
-            </form>
-        </div>
+                <h3 style={{ marginTop: '50px' }} >Adicionar nova ação:</h3>
+                <form onSubmit={handleSubmit}>
+                    <div>
+                        <label htmlFor='date'> Data de compra</label>
+                        <input required value={date} onChange={e => setDate(e.target.value)} type="text" name="date" id="date" />
+                    </div>
+                    <div>
+                        <label htmlFor='company'> Empresa</label>
+                        <input required value={company} onChange={e => setCompany(e.target.value)} type="text" name="company" id="company" />
+                    </div>
+                    <div>
+                        <label htmlFor='ticker'> Ticker </label>
+                        <input required value={ticker} onChange={e => setTicker(e.target.value)} type="text" name="ticker" id="ticker" />
+                    </div>
+                    <div>
+                        <label htmlFor='buyPrice'> Preço de compra </label>
+                        <input required value={buyPrice} onChange={e => setBuyPrice(e.target.value)} type="text" name="buyPrice" id="buyPrice" />
+                    </div>
+                    <div>
+                        <label htmlFor='shares'> Número de ações </label>
+                        <input required value={shares} onChange={e => setShares(e.target.value)} type="text" name="shares" id="shares" />
+                    </div>
+                    <div>
+                        <button type='submit'>Enviar</button>
+
+                    </div>
+                </form>
+            </div>
         </div>
     )
 }
