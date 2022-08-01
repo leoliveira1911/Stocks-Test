@@ -1,4 +1,5 @@
 import { google } from 'googleapis'
+import { setTimeout } from 'timers/promises';
 
 export async function getServerSideProps({ query }) {
 
@@ -22,21 +23,13 @@ export async function getServerSideProps({ query }) {
 
 }
 
-export function rowCount({rows}) {
-    let rowCount = 0
-    rows.map((el) => {
-        if (el[0] != "" && el[0] != 'DATA'){rowCount = rowCount + 1}
-
-}) 
-return rowCount
-}
-
-export default function Post({ rows, sheets }) {
+export default function Post({ rows }) {
 
 
     function calcValues(data) {
         let invested = 0
         let current = 0
+        let rowCount = 0
         data.map((el) => {
             if (el[0] != "" && el[0] != 'DATA') {
                 let stringInvestedBeforeTreat = el[8]
@@ -48,6 +41,8 @@ export default function Post({ rows, sheets }) {
                 let stringCurrentAfterTreat = stringCurrentBeforeTreat.replace('R$', '').replace(',', '.').replace(' ', '')
                 let valueCurrent = parseFloat(stringCurrentAfterTreat)
                 current = current + valueCurrent
+
+                rowCount = rowCount + 1
             }
         })
 
@@ -57,7 +52,8 @@ export default function Post({ rows, sheets }) {
             profitPercent,
             invested: invested.toFixed(2) ,
             current: current.toFixed(2) ,
-            absolute
+            absolute,
+            rowCount
         }
         return values
     }
@@ -115,7 +111,9 @@ export default function Post({ rows, sheets }) {
                     </tr>
                 </tbody>
             </table>
-
+            <div>
+                <h1>Contagem de ações: {calcValues(rows).rowCount} </h1>
+            </div>
         </div>
     )
 }
