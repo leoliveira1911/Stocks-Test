@@ -1,6 +1,6 @@
 import { google } from 'googleapis'
 import { useRouter } from 'next/router';
-import { FormEvent, useEffect, useState } from 'react'
+import { Component, FormEvent, useEffect, useState } from 'react'
 import { setInterval } from 'timers';
 
 
@@ -19,6 +19,7 @@ export async function getServerSideProps({ query }) {
         range
     })
     const rows = response.data.values
+    console.log('OpaLindão')
     return {
         props: {
             rows,
@@ -37,6 +38,10 @@ export default function Post({ rows}) {
     const [buyPrice, setBuyPrice] = useState('')
     const [shares, setShares] = useState('')
     const [stocks, setStocks] = useState(rows)
+<<<<<<< Updated upstream:src/pages/[id].tsx
+=======
+    const [values, setValues] = useState<{profitPercent, invested, current, absolute, rowCount}>()
+>>>>>>> Stashed changes:src/pages/index.tsx
 
     const refreshData = () => {
         router.replace(router.asPath);
@@ -93,11 +98,23 @@ export default function Post({ rows}) {
 
         const content = await response.json()
         const stock = await content.data
+<<<<<<< Updated upstream:src/pages/[id].tsx
         
         setStocks(stock)
     }
     
     setInterval(() => { handleGet() }, 120000)
+=======
+        //console.log(stock)
+        
+        setStocks(stock)
+        calcValues(stock)
+
+    }
+    
+
+   
+>>>>>>> Stashed changes:src/pages/index.tsx
 
     function calcValues(data) {
         let invested = 0
@@ -150,10 +167,25 @@ export default function Post({ rows}) {
                 )
         })
     }
+<<<<<<< Updated upstream:src/pages/[id].tsx
 
 
 
+=======
+  
+    useEffect(()=>{
+        return  ()=>{
+            calcValues(rows)
+            setInterval(()=>{
+                handleGet()
+                console.log(new Date())
+            }, 5000)
+        }
 
+    } , [])
+>>>>>>> Stashed changes:src/pages/index.tsx
+
+   
     return (
         <div>
             <h1>Shares</h1>
