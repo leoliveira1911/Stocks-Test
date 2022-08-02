@@ -1,27 +1,23 @@
 import { google } from 'googleapis'
 import { useRouter } from 'next/router';
-<<<<<<< Updated upstream:stocks/pages/[id].tsx
-import { FormEvent, useState } from 'react'
-=======
 import { Component, FormEvent, useEffect, useState } from 'react'
 import { setInterval } from 'timers';
 import credentials from '../../credentialsDrive.json'
 import Table from '../components/Table';
->>>>>>> Stashed changes:src/pages/index.tsx
 
 
 
-export async function getServerSideProps({ query }) {
+export async function getServerSideProps() {
 
     const auth = new google.auth.GoogleAuth({
         keyFile: "credentialsDrive.json",
         scopes: "https://www.googleapis.com/auth/spreadsheets"
     });
     const sheets = google.sheets({ version: 'v4', auth })
-    const { id } = query
-    const range = `${id}!A:J`
+    
+    const range = `1!A:J`
     const response = await sheets.spreadsheets.values.get({
-        spreadsheetId: process.env.SHEET_ID,
+        spreadsheetId: credentials.sheet_id,
         range
     })
     const rows = response.data.values
@@ -36,25 +32,17 @@ export async function getServerSideProps({ query }) {
 
 
 
-export default function Post({ rows }) {
+export default function Post({ rows}) {
     const router = useRouter()
     const [date, setDate] = useState('')
     const [company, setCompany] = useState('')
     const [ticker, setTicker] = useState('')
     const [buyPrice, setBuyPrice] = useState('')
     const [shares, setShares] = useState('')
-<<<<<<< Updated upstream:stocks/pages/[id].tsx
-
-    const refreshData = () => {
-        router.replace(router.asPath);
-    }
-
-=======
     const [stocks, setStocks] = useState(rows)
     const [values, setValues] = useState<{profitPercent, invested, current, absolute, rowCount}>()
 
    
->>>>>>> Stashed changes:src/pages/index.tsx
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         //DATA	COMPANY	TICKER	PROFIT_PERCENT	PROFIT_ABSOLUTE	PRICE	BUY_PRICE	SHARES	INVESTED_VALUE	CURRENT
@@ -62,13 +50,13 @@ export default function Post({ rows }) {
             date,
             company,
             ticker,
-            profitPercent: `=(G${calcValues(rows).rowCount + 2}-F${calcValues(rows).rowCount + 2})/G${calcValues(rows).rowCount + 2}*(-1)`,
-            profitAbsolute: `=(F${calcValues(rows).rowCount + 2}-G${calcValues(rows).rowCount + 2})*H${calcValues(rows).rowCount + 2}`,
-            price: `=GOOGLEFINANCE(C${calcValues(rows).rowCount + 2})`,
+            profitPercent: `=(G${values.rowCount + 2}-F${values.rowCount + 2})/G${values.rowCount + 2}*(-1)`,
+            profitAbsolute: `=(F${values.rowCount + 2}-G${values.rowCount + 2})*H${values.rowCount + 2}`,
+            price: `=GOOGLEFINANCE(C${values.rowCount + 2})`,
             buyPrice,
             shares,
-            investedValue: `=H${calcValues(rows).rowCount + 2}*G${calcValues(rows).rowCount + 2}`,
-            current: `=H${calcValues(rows).rowCount + 2}*F${calcValues(rows).rowCount + 2}`
+            investedValue: `=H${values.rowCount + 2}*G${values.rowCount + 2}`,
+            current: `=H${values.rowCount + 2}*F${values.rowCount + 2}`
         }
 
         const response = await fetch('/api/submit', {
@@ -90,13 +78,19 @@ export default function Post({ rows }) {
         setBuyPrice('')
         setShares('')
 
-        refreshData()
+        handleGet()
     }
+    
+    const handleGet = async () => {
+        
+        const response = await fetch('/api/submit', {
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+        })
 
-<<<<<<< Updated upstream:stocks/pages/[id].tsx
-
-
-=======
         const content = await response.json()
         const stock = await content.data
         //console.log(stock)
@@ -108,7 +102,6 @@ export default function Post({ rows }) {
     
 
    
->>>>>>> Stashed changes:src/pages/index.tsx
 
     function calcValues(data) {
         let invested = 0
@@ -139,30 +132,8 @@ export default function Post({ rows }) {
             absolute,
             rowCount
         }
-        return values
+        setValues(values)
     }
-<<<<<<< Updated upstream:stocks/pages/[id].tsx
-
-    function renderData(data) {
-        return data.map((el, index) => {
-            if (el[0] != "" && index > 0)
-                return (
-                    <tr key={index}>
-                        <td>{el[0]}</td>
-                        <td>{el[1]}</td>
-                        <td>{el[2]}</td>
-                        <td>{el[3]}</td>
-                        <td>{el[4]}</td>
-                        <td>{el[5]}</td>
-                        <td>{el[6]}</td>
-                        <td>{el[7]}</td>
-                        <td>{el[8]}</td>
-                        <td>{el[9]}</td>
-                    </tr>
-                )
-        })
-    }
-=======
   
     useEffect(()=>{
         return  ()=>{
@@ -175,45 +146,9 @@ export default function Post({ rows }) {
 
     } , [])
 
-   
->>>>>>> Stashed changes:src/pages/index.tsx
     return (
         <div>
-            <h1>Shares</h1>
-            <h2>Valor da carteira : R$ {calcValues(rows).current}</h2>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Data de Compra </th>
-                        <th>Empresa </th>
-                        <th>Ticker </th>
-                        <th>Lucro % </th>
-                        <th>Lucro Bruto </th>
-                        <th>Cotação atual </th>
-                        <th>Preço de compra </th>
-                        <th>Numero de Ações </th>
-                        <th>Valor Investido </th>
-                        <th>Saldo Atual </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {renderData(rows)}
-                    <tr>
-                        <td>Total</td>
-                        <td></td>
-                        <td></td>
-                        <td>{calcValues(rows).profitPercent}%</td>
-                        <td>R$ {calcValues(rows).absolute}</td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td>{calcValues(rows).invested}</td>
-                        <td>{calcValues(rows).current}</td>
-                    </tr>
-                </tbody>
-            </table>
-            <div>
-            </div>
+            <Table values={values} stocks={stocks}></Table>
             <div>
                 <h3 style={{ marginTop: '50px' }} >Adicionar nova ação:</h3>
                 <form onSubmit={handleSubmit}>
