@@ -1,6 +1,13 @@
 import { google } from 'googleapis'
 import { useRouter } from 'next/router';
+<<<<<<< Updated upstream:stocks/pages/[id].tsx
 import { FormEvent, useState } from 'react'
+=======
+import { Component, FormEvent, useEffect, useState } from 'react'
+import { setInterval } from 'timers';
+import credentials from '../../credentialsDrive.json'
+import Table from '../components/Table';
+>>>>>>> Stashed changes:src/pages/index.tsx
 
 
 
@@ -18,6 +25,7 @@ export async function getServerSideProps({ query }) {
         range
     })
     const rows = response.data.values
+    console.log('OpaLindão')
     return {
         props: {
             rows,
@@ -35,11 +43,18 @@ export default function Post({ rows }) {
     const [ticker, setTicker] = useState('')
     const [buyPrice, setBuyPrice] = useState('')
     const [shares, setShares] = useState('')
+<<<<<<< Updated upstream:stocks/pages/[id].tsx
 
     const refreshData = () => {
         router.replace(router.asPath);
     }
 
+=======
+    const [stocks, setStocks] = useState(rows)
+    const [values, setValues] = useState<{profitPercent, invested, current, absolute, rowCount}>()
+
+   
+>>>>>>> Stashed changes:src/pages/index.tsx
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         //DATA	COMPANY	TICKER	PROFIT_PERCENT	PROFIT_ABSOLUTE	PRICE	BUY_PRICE	SHARES	INVESTED_VALUE	CURRENT
@@ -78,8 +93,22 @@ export default function Post({ rows }) {
         refreshData()
     }
 
+<<<<<<< Updated upstream:stocks/pages/[id].tsx
 
 
+=======
+        const content = await response.json()
+        const stock = await content.data
+        //console.log(stock)
+        
+        setStocks(stock)
+        calcValues(stock)
+
+    }
+    
+
+   
+>>>>>>> Stashed changes:src/pages/index.tsx
 
     function calcValues(data) {
         let invested = 0
@@ -112,6 +141,7 @@ export default function Post({ rows }) {
         }
         return values
     }
+<<<<<<< Updated upstream:stocks/pages/[id].tsx
 
     function renderData(data) {
         return data.map((el, index) => {
@@ -132,6 +162,21 @@ export default function Post({ rows }) {
                 )
         })
     }
+=======
+  
+    useEffect(()=>{
+        return  ()=>{
+            calcValues(rows)
+            setInterval(()=>{
+                handleGet()
+                console.log(new Date())
+            }, 5000)
+        }
+
+    } , [])
+
+   
+>>>>>>> Stashed changes:src/pages/index.tsx
     return (
         <div>
             <h1>Shares</h1>
