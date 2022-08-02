@@ -13,15 +13,18 @@ export async function getServerSideProps() {
         keyFile: "credentialsDrive.json",
         scopes: "https://www.googleapis.com/auth/spreadsheets"
     });
+
     const sheets = google.sheets({ version: 'v4', auth })
     
     const range = `1!A:J`
+
     const response = await sheets.spreadsheets.values.get({
         spreadsheetId: credentials.sheet_id,
         range
     })
+
     const rows = response.data.values
-    console.log('OpaLindão')
+
     return {
         props: {
             rows,
@@ -33,7 +36,7 @@ export async function getServerSideProps() {
 
 
 export default function Post({ rows}) {
-    const router = useRouter()
+ 
     const [date, setDate] = useState('')
     const [company, setCompany] = useState('')
     const [ticker, setTicker] = useState('')
@@ -93,8 +96,7 @@ export default function Post({ rows}) {
 
         const content = await response.json()
         const stock = await content.data
-        //console.log(stock)
-        
+              
         setStocks(stock)
         calcValues(stock)
 
@@ -140,11 +142,10 @@ export default function Post({ rows}) {
             calcValues(rows)
             setInterval(()=>{
                 handleGet()
-                console.log(new Date())
-            }, 5000)
+            }, 60000)
         }
 
-    } , [])
+    } , [] )
 
     return (
         <div>
