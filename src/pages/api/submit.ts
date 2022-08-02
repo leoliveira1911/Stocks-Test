@@ -1,5 +1,6 @@
 import { NextApiRequest , NextApiResponse } from 'next'
 import {google} from 'googleapis'
+import credentials from '../../../credentialsDrive.json'
 
 //DATA	COMPANY	TICKER	PROFIT_PERCENT	PROFIT_ABSOLUTE	PRICE	BUY_PRICE	SHARES	INVESTED_VALUE	CURRENT
 type SheetForm = {
@@ -35,7 +36,7 @@ export default async function handler(
         
         const range = `A1:J1`
         const response = await sheets.spreadsheets.values.append({
-            spreadsheetId: process.env.SHEET_ID,
+            spreadsheetId: credentials.sheet_id,
             range,
             valueInputOption: 'USER_ENTERED',
             requestBody: {
@@ -65,7 +66,7 @@ export default async function handler(
             const  id  = 1
             const range = `${id}!A:J`
             const response = await sheets.spreadsheets.values.get({
-                spreadsheetId: process.env.SHEET_ID,
+                spreadsheetId: credentials.sheet_id,
                 range
             })
             const rows = response.data.values
