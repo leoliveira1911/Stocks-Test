@@ -1,16 +1,14 @@
 interface TableProps {
-    current?: string,
     stocks: any[][],
-    profitPercent?: string,
-    absolute?: string,
-    invested?: string,
     values: {
         profitPercent,
         invested,
         current,
         absolute,
         rowCount
-    }
+    },
+    update:(e)=> void
+    del:(e)=> void
 }
 
 export default function Table(props:TableProps ) {
@@ -29,6 +27,10 @@ export default function Table(props:TableProps ) {
                         <td>{el[7]}</td>
                         <td>{el[8]}</td>
                         <td>{el[9]}</td>
+                        <td>
+                            <button onClick={()=>props.update(index)}>Alt</button>
+                            <button onClick={()=>props.del(index)}>Del</button>
+                        </td>
                     </tr>
                 )
         })
@@ -51,6 +53,7 @@ export default function Table(props:TableProps ) {
                     <th>Numero de Ações </th>
                     <th>Valor Investido </th>
                     <th>Saldo Atual </th>
+                    <th>Ação</th>
                 </tr>
             </thead>
             <tbody>

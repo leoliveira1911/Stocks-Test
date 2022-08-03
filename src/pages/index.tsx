@@ -1,4 +1,5 @@
 import { google } from 'googleapis'
+import { factchecktools } from 'googleapis/build/src/apis/factchecktools';
 import { useRouter } from 'next/router';
 import { Component, FormEvent, useEffect, useState } from 'react'
 import { setInterval } from 'timers';
@@ -102,6 +103,74 @@ export default function Post({ rows}) {
 
     }
     
+    const update = async  (e) => {
+        
+        const form = {
+            date,
+            company,
+            ticker,
+            profitPercent: `=(G${e+1}-F${e+1})/G${e+1}*(-1)`,
+            profitAbsolute: `=(F${e+1}-G${e+1})*H${e+1}`,
+            price: `=GOOGLEFINANCE(C${e+1})`,
+            buyPrice,
+            shares,
+            investedValue: `=H${e+1}*G${e+1}`,
+            current: `=H${e+1}*F${e+1}`,
+            range: `A${e+1}:J${e+1}`
+        }
+
+        const response = await fetch('/api/submit', {
+            method: 'DELETE',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(form)
+        })
+
+        const content = await response
+
+        alert(content)
+
+        setDate('')
+        setCompany('')
+        setTicker('')
+        setBuyPrice('')
+        setShares('')
+
+        handleGet()
+
+    }
+
+   
+    const del = async  (e) => {
+        
+        const form = {
+            range: `${e+1}`
+        }
+
+        const response = await fetch('/api/submit', {
+            method: 'DELETE',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(form)
+        })
+
+        const content = await response
+
+        alert(content)
+
+        setDate('')
+        setCompany('')
+        setTicker('')
+        setBuyPrice('')
+        setShares('')
+
+        handleGet()
+
+    }
 
    
 
@@ -149,7 +218,7 @@ export default function Post({ rows}) {
 
     return (
         <div>
-            <Table values={values} stocks={stocks}></Table>
+            <Table values={values} stocks={stocks} update={(e)=>update(e)} del={(e)=>del(e)}></Table>
             <div>
                 <h3 style={{ marginTop: '50px' }} >Adicionar nova ação:</h3>
                 <form onSubmit={handleSubmit}>
