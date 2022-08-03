@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import { google } from 'googleapis'
 import credentials from '../../../credentialsDrive.json'
-import { format } from 'path'
+
 
 //DATA	COMPANY	TICKER	PROFIT_PERCENT	PROFIT_ABSOLUTE	PRICE	BUY_PRICE	SHARES	INVESTED_VALUE	CURRENT
 type SheetForm = {

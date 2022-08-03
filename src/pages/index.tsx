@@ -8,6 +8,7 @@ import Table from '../components/Table';
 
 
 
+
 export async function getServerSideProps() {
 
     const auth = new google.auth.GoogleAuth({
@@ -120,7 +121,7 @@ export default function Post({ rows}) {
         }
 
         const response = await fetch('/api/submit', {
-            method: 'DELETE',
+            method: 'PUT',
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
@@ -205,6 +206,8 @@ export default function Post({ rows}) {
         }
         setValues(values)
     }
+
+ 
   
     useEffect(()=>{
         return  ()=>{
@@ -221,7 +224,7 @@ export default function Post({ rows}) {
             <Table values={values} stocks={stocks} update={(e)=>update(e)} del={(e)=>del(e)}></Table>
             <div>
                 <h3 style={{ marginTop: '50px' }} >Adicionar nova ação:</h3>
-                <form onSubmit={handleSubmit}>
+                 <form onSubmit={handleSubmit}>
                     <div>
                         <label htmlFor='date'> Data de compra</label>
                         <input required value={date} onChange={e => setDate(e.target.value)} type="text" name="date" id="date" />
@@ -246,8 +249,10 @@ export default function Post({ rows}) {
                         <button type='submit'>Enviar</button>
 
                     </div>
-                </form>
+                </form> 
+                
             </div>
+
         </div>
     )
 }
