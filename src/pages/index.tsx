@@ -1,13 +1,10 @@
 import { google } from 'googleapis'
-import { factchecktools } from 'googleapis/build/src/apis/factchecktools';
-import { useRouter } from 'next/router';
-import { Component, FormEvent, useEffect, useState } from 'react'
+import { FormEvent, useEffect, useState } from 'react'
 import { setInterval } from 'timers';
 import credentials from '../../credentialsDrive.json'
 import Table from '../components/Table';
-
-
-
+import Form from '../components/Form'
+import { useRouter } from 'next/router';
 
 export async function getServerSideProps() {
 
@@ -38,7 +35,10 @@ export async function getServerSideProps() {
 
 
 export default function Post({ rows}) {
- 
+   
+    const [addStockForm, setAddStockForm] = useState('hide')
+    const [updateRow, setUpdateRow] = useState(0)
+    const [updateStockForm, setUpdateStockForm] = useState('hide')
     const [date, setDate] = useState('')
     const [company, setCompany] = useState('')
     const [ticker, setTicker] = useState('')
@@ -50,6 +50,7 @@ export default function Post({ rows}) {
    
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+        console.log(e)
         //DATA	COMPANY	TICKER	PROFIT_PERCENT	PROFIT_ABSOLUTE	PRICE	BUY_PRICE	SHARES	INVESTED_VALUE	CURRENT
         const form = {
             date,
@@ -77,6 +78,7 @@ export default function Post({ rows}) {
 
         alert(content)
 
+        setAddStockForm('hide')
         setDate('')
         setCompany('')
         setTicker('')
@@ -103,21 +105,27 @@ export default function Post({ rows}) {
         calcValues(stock)
 
     }
+
+    const update = (e) => {
+        updateStockForm === 'hide' ? setUpdateStockForm('show') : setUpdateStockForm('hide')
+        setUpdateRow(e)
+
+    }
     
-    const update = async  (e) => {
-        
+    const updateStock = async  (e: FormEvent<HTMLFormElement> , row) => {
+        e.preventDefault()
         const form = {
             date,
             company,
             ticker,
-            profitPercent: `=(G${e+1}-F${e+1})/G${e+1}*(-1)`,
-            profitAbsolute: `=(F${e+1}-G${e+1})*H${e+1}`,
-            price: `=GOOGLEFINANCE(C${e+1})`,
+            profitPercent: `=(G${row+1}-F${row+1})/G${row+1}*(-1)`,
+            profitAbsolute: `=(F${row+1}-G${row+1})*H${row+1}`,
+            price: `=GOOGLEFINANCE(C${row+1})`,
             buyPrice,
             shares,
-            investedValue: `=H${e+1}*G${e+1}`,
-            current: `=H${e+1}*F${e+1}`,
-            range: `A${e+1}:J${e+1}`
+            investedValue: `=H${row+1}*G${row+1}`,
+            current: `=H${row+1}*F${row+1}`,
+            range: `A${row+1}:J${row+1}`
         }
 
         const response = await fetch('/api/submit', {
@@ -138,6 +146,8 @@ export default function Post({ rows}) {
         setTicker('')
         setBuyPrice('')
         setShares('')
+        setUpdateRow(0)
+        setUpdateStockForm('hide')
 
         handleGet()
 
@@ -173,7 +183,13 @@ export default function Post({ rows}) {
 
     }
 
-   
+    function addStock() {
+        addStockForm == 'hide' ? setAddStockForm('show') : setAddStockForm('hide')
+    }
+
+   function formSubmit(e: FormEvent<HTMLFormElement>) {
+    handleSubmit(e)
+   }
 
     function calcValues(data) {
         let invested = 0
@@ -206,8 +222,6 @@ export default function Post({ rows}) {
         }
         setValues(values)
     }
-
- 
   
     useEffect(()=>{
         return  ()=>{
@@ -220,37 +234,38 @@ export default function Post({ rows}) {
     } , [] )
 
     return (
-        <div>
+        <div className='flex flex-col justify-center items-center'>
             <Table values={values} stocks={stocks} update={(e)=>update(e)} del={(e)=>del(e)}></Table>
-            <div>
-                <h3 style={{ marginTop: '50px' }} >Adicionar nova ação:</h3>
-                 <form onSubmit={handleSubmit}>
-                    <div>
-                        <label htmlFor='date'> Data de compra</label>
-                        <input required value={date} onChange={e => setDate(e.target.value)} type="text" name="date" id="date" />
-                    </div>
-                    <div>
-                        <label htmlFor='company'> Empresa</label>
-                        <input required value={company} onChange={e => setCompany(e.target.value)} type="text" name="company" id="company" />
-                    </div>
-                    <div>
-                        <label htmlFor='ticker'> Ticker </label>
-                        <input required value={ticker} onChange={e => setTicker(e.target.value)} type="text" name="ticker" id="ticker" />
-                    </div>
-                    <div>
-                        <label htmlFor='buyPrice'> Preço de compra </label>
-                        <input required value={buyPrice} onChange={e => setBuyPrice(e.target.value)} type="text" name="buyPrice" id="buyPrice" />
-                    </div>
-                    <div>
-                        <label htmlFor='shares'> Número de ações </label>
-                        <input required value={shares} onChange={e => setShares(e.target.value)} type="text" name="shares" id="shares" />
-                    </div>
-                    <div>
-                        <button type='submit'>Enviar</button>
 
-                    </div>
-                </form> 
-                
+            <button onClick={addStock}>Adicionar Nova Ação</button>
+            <div className='flex'>
+
+            {addStockForm === 'show' ? (
+
+            <Form 
+            action='Adicionar Nova Ação'
+            setBuyPrice={(e)=>setBuyPrice(e)} 
+            setCompany={(e)=>setCompany(e)} 
+            setDate={(e)=>setDate(e)} 
+            setTicker={(e)=> setTicker(e)} 
+            setShares={(e)=>setShares(e)} 
+            submit={(e)=>handleSubmit(e)}
+
+             ></Form>
+            ) : (null) } 
+           
+            {updateStockForm === 'show' ? (
+            
+            <Form 
+            action='Atualizar Ação'
+            setBuyPrice={(e)=>setBuyPrice(e)} 
+            setCompany={(e)=>setCompany(e)} 
+            setDate={(e)=>setDate(e)} 
+            setTicker={(e)=> setTicker(e)} 
+            setShares={(e)=>setShares(e)} 
+            submit={(e)=>updateStock(e, updateRow)} 
+             ></Form>
+            ) : (null)}
             </div>
 
         </div>
