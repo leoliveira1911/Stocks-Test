@@ -1,4 +1,6 @@
-import { EditIcon, DeleteIcon } from '../icons'
+import { useState } from 'react'
+import { EditIcon, DeleteIcon ,VisibleIcon } from '../icons'
+import Button from './Button'
 
 
 interface TableProps {
@@ -34,8 +36,11 @@ export default function Table(props: TableProps) {
                         <td className={`text-center px-3`} >{el[8]}</td>
                         <td className={`text-center px-3`} >{el[9]}</td>
                         <td className={`text-center px-3`}>
+
                             <div onClick={() => props.update(index)} className={`
+                            
                      flex 
+                     flex-shrink
                      justify-center 
                      items-center
                      text-green-600
@@ -48,6 +53,7 @@ export default function Table(props: TableProps) {
                             </div>
                             <div onClick={() => props.del(index)} className={`
                      flex 
+                     flex-shrink
                      justify-center 
                      items-center
                      text-red-600
@@ -64,13 +70,24 @@ export default function Table(props: TableProps) {
         })
     }
 
+    const [visible , setVisible] = useState(false)
+
+    function renderWalletValue(){
+        console.log('teste')
+        return visible === true ? (<span className='cursor-pointer' onClick={callSetVisible}>{props.values?.current}</span>) : (<div className={` cursor-pointer h-10 w-10 inline-block align-middle`} onClick={callSetVisible}>{VisibleIcon}</div>)
+    }
+    
+    function callSetVisible() {
+        visible === true ? setVisible(false) : setVisible(true)
+    }
+
     return (
         <div className={`
         flex flex-col justify-center items-center
         `}>
-            <h1>Shares</h1>
-            <h2>Valor da carteira : R$ {props.values?.current}</h2>
-            <table className={`rounded-xl overflow-hidden`}>
+            
+            <h2 className={`font-bold text-4xl m-3`}>Valor da carteira : R$ {renderWalletValue()} </h2>
+            <table className={`rounded-xl overflow-hidden mx-4`}>
                 <thead className={`bg-gray-900 py-2`}>
                     <tr>
                         <th className={`p-3`} >Data de Compra </th>

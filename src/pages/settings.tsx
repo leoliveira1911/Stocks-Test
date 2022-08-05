@@ -1,13 +1,13 @@
 import Layout from '../components/template/Layout'
 
-export default function Home() {
+export default function Settings() {
   return (
     <div className={`
     
     `}>
       <Layout 
-        title='Página Inicial'
-        subtitle='Construção template-admin'
+        title='Configurações'
+        subtitle='Personalização do sistema'
       >
         <h3>Conteúdo</h3>
       </Layout>

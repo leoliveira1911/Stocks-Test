@@ -1,4 +1,5 @@
 import { FormEvent, useEffect, useState } from "react"
+import Button from './Button'
 
 interface FormProps {
 submit?:(e:FormEvent<HTMLFormElement>)=> void
@@ -55,8 +56,8 @@ export default function Form (props: FormProps) {
                         <input required value={shares} onChange={e => {props.setShares(e.target.value) ; setShares(e.target.value)}} type="text" name="shares" id="shares" />
                     </div>
                     <div>
-                        <button type='submit' onClick={()=>resetValues}>Enviar</button>
-
+                        {/* <button type='submit' onClick={()=>resetValues}>Enviar</button> */}
+                        <Button type='submit' onClick={()=>resetValues} label='Enviar'></Button>
                     </div>
                 </form> 
                 
