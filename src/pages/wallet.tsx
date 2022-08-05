@@ -4,19 +4,20 @@ import { setInterval } from 'timers';
 import credentials from '../../credentialsDrive.json'
 import Table from '../components/Table';
 import Form from '../components/Form'
-import { useRouter } from 'next/router';
+import useAuth from '../data/hook/useAuth';
 import Button from '../components/Button';
 import Layout from '../components/template/Layout';
+import GoogleSpreadsheet from 'google-spreadsheet';
 
 export async function getServerSideProps() {
-
+    
     const auth = new google.auth.GoogleAuth({
         keyFile: "credentialsDrive.json",
         scopes: "https://www.googleapis.com/auth/spreadsheets"
     });
 
     const sheets = google.sheets({ version: 'v4', auth })
-    
+
     const range = `1!A:J`
 
     const response = await sheets.spreadsheets.values.get({
@@ -36,8 +37,8 @@ export async function getServerSideProps() {
 
 
 
-export default function Post({ rows}) {
-   
+export default function Post({ rows }) {
+
     const [addStockForm, setAddStockForm] = useState('hide')
     const [updateRow, setUpdateRow] = useState(0)
     const [updateStockForm, setUpdateStockForm] = useState('hide')
@@ -47,9 +48,9 @@ export default function Post({ rows}) {
     const [buyPrice, setBuyPrice] = useState('')
     const [shares, setShares] = useState('')
     const [stocks, setStocks] = useState(rows)
-    const [values, setValues] = useState<{profitPercent, invested, current, absolute, rowCount}>()
+    const [values, setValues] = useState<{ profitPercent, invested, current, absolute, rowCount }>()
 
-   
+
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         console.log(e)
@@ -89,9 +90,9 @@ export default function Post({ rows}) {
 
         handleGet()
     }
-    
+
     const handleGet = async () => {
-        
+
         const response = await fetch('/api/submit', {
             method: 'GET',
             headers: {
@@ -102,7 +103,7 @@ export default function Post({ rows}) {
 
         const content = await response.json()
         const stock = await content.data
-              
+
         setStocks(stock)
         calcValues(stock)
 
@@ -113,21 +114,21 @@ export default function Post({ rows}) {
         setUpdateRow(e)
 
     }
-    
-    const updateStock = async  (e: FormEvent<HTMLFormElement> , row) => {
+
+    const updateStock = async (e: FormEvent<HTMLFormElement>, row) => {
         e.preventDefault()
         const form = {
             date,
             company,
             ticker,
-            profitPercent: `=(G${row+1}-F${row+1})/G${row+1}*(-1)`,
-            profitAbsolute: `=(F${row+1}-G${row+1})*H${row+1}`,
-            price: `=GOOGLEFINANCE(C${row+1})`,
+            profitPercent: `=(G${row + 1}-F${row + 1})/G${row + 1}*(-1)`,
+            profitAbsolute: `=(F${row + 1}-G${row + 1})*H${row + 1}`,
+            price: `=GOOGLEFINANCE(C${row + 1})`,
             buyPrice,
             shares,
-            investedValue: `=H${row+1}*G${row+1}`,
-            current: `=H${row+1}*F${row+1}`,
-            range: `A${row+1}:J${row+1}`
+            investedValue: `=H${row + 1}*G${row + 1}`,
+            current: `=H${row + 1}*F${row + 1}`,
+            range: `A${row + 1}:J${row + 1}`
         }
 
         const response = await fetch('/api/submit', {
@@ -155,11 +156,11 @@ export default function Post({ rows}) {
 
     }
 
-   
-    const del = async  (e) => {
-        
+
+    const del = async (e) => {
+
         const form = {
-            range: `${e+1}`
+            range: `${e + 1}`
         }
 
         const response = await fetch('/api/submit', {
@@ -221,67 +222,67 @@ export default function Post({ rows}) {
         }
         setValues(values)
     }
-  
-    useEffect(()=>{
-        return  ()=>{
+
+    useEffect(() => {
+        return () => {
             calcValues(rows)
-            setInterval(()=>{
+            setInterval(() => {
                 handleGet()
             }, 60000)
         }
 
-    } , [] )
+    }, [])
 
     return (
 
         <div className={`
     
         `}>
-          <Layout 
-            title='Carteira de Ações'
-            subtitle='Gerencie sua carteira de ações'
-          >
-            
-        <div className='flex flex-col justify-center items-center'>
-            <Table values={values} stocks={stocks} update={(e)=>update(e)} del={(e)=>del(e)}></Table>
+            <Layout
+                title='Carteira de Ações'
+                subtitle='Gerencie sua carteira de ações'
+            >
 
-            <Button onClick={addStock} label='Adicionar Nova Ação'></Button>
-           {/*  <button onClick={addStock}>Adicionar Nova Ação</button> */}
-            <div className='flex'>
+                <div className='flex flex-col justify-center items-center'>
+                    <Table values={values} stocks={stocks} update={(e) => update(e)} del={(e) => del(e)}></Table>
 
-            {addStockForm === 'show' ? (
+                    <Button onClick={addStock} label='Adicionar Nova Ação'></Button>
+                    {/*  <button onClick={addStock}>Adicionar Nova Ação</button> */}
+                    <div className='flex'>
 
-            <Form 
-            action='Adicionar Nova Ação'
-            setBuyPrice={(e)=>setBuyPrice(e)} 
-            setCompany={(e)=>setCompany(e)} 
-            setDate={(e)=>setDate(e)} 
-            setTicker={(e)=> setTicker(e)} 
-            setShares={(e)=>setShares(e)} 
-            submit={(e)=>handleSubmit(e)}
+                        {addStockForm === 'show' ? (
 
-             ></Form>
-            ) : (null) } 
-           
-            {updateStockForm === 'show' ? (
-            
-            <Form 
-            action='Atualizar Ação'
-            setBuyPrice={(e)=>setBuyPrice(e)} 
-            setCompany={(e)=>setCompany(e)} 
-            setDate={(e)=>setDate(e)} 
-            setTicker={(e)=> setTicker(e)} 
-            setShares={(e)=>setShares(e)} 
-            submit={(e)=>updateStock(e, updateRow)} 
-             ></Form>
-            ) : (null)}
-            </div>
+                            <Form
+                                action='Adicionar Nova Ação'
+                                setBuyPrice={(e) => setBuyPrice(e)}
+                                setCompany={(e) => setCompany(e)}
+                                setDate={(e) => setDate(e)}
+                                setTicker={(e) => setTicker(e)}
+                                setShares={(e) => setShares(e)}
+                                submit={(e) => handleSubmit(e)}
 
-        </div>
+                            ></Form>
+                        ) : (null)}
+
+                        {updateStockForm === 'show' ? (
+
+                            <Form
+                                action='Atualizar Ação'
+                                setBuyPrice={(e) => setBuyPrice(e)}
+                                setCompany={(e) => setCompany(e)}
+                                setDate={(e) => setDate(e)}
+                                setTicker={(e) => setTicker(e)}
+                                setShares={(e) => setShares(e)}
+                                submit={(e) => updateStock(e, updateRow)}
+                            ></Form>
+                        ) : (null)}
+                    </div>
+
+                </div>
 
 
 
-          </Layout>
+            </Layout>
         </div>
     )
 }

@@ -16,7 +16,7 @@ export function AppProvider(props) {
     function switchTheme() {
         const newTheme = theme === '' ? 'dark' : ''
         setTheme(newTheme)
-        localStorage.setItem('theme',  newTheme )
+        localStorage.setItem('theme',  newTheme )        
     }
 
     useEffect(()=>{

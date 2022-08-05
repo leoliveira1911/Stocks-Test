@@ -7,6 +7,7 @@ interface UserAvatarProps {
 
 export default function UserAvatar(props: UserAvatarProps) {
     const auth = useAuth()
+
     return (
         <Link href='/profile'>
             <img src={auth.user?.imgUrl ?? '/images/avatar.jpg'} alt='User Avatar'

@@ -73,7 +73,6 @@ export default function Table(props: TableProps) {
     const [visible , setVisible] = useState(false)
 
     function renderWalletValue(){
-        console.log('teste')
         return visible === true ? (<span className='cursor-pointer' onClick={callSetVisible}>{props.values?.current}</span>) : (<div className={` cursor-pointer h-10 w-10 inline-block align-middle`} onClick={callSetVisible}>{VisibleIcon}</div>)
     }
     
