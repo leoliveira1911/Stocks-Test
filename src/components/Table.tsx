@@ -19,7 +19,7 @@ interface TableProps {
 
 export default function Table(props: TableProps) {
     function renderData(data) {
-        return data.map((el, index) => {
+        return data?.map((el, index) => {
             if (el[0] != "" && index > 0)
                 return (
                     <tr key={index} className={`
