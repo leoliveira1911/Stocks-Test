@@ -42,7 +42,7 @@ export default async function handler(
 
             const range = `A1:J1`
             const response = await sheets.spreadsheets.values.append({
-                spreadsheetId: credentials.sheet_id,
+                //spreadsheetId: credentials.sheet_id,
                 range,
                 valueInputOption: 'USER_ENTERED',
                 requestBody: {
@@ -76,7 +76,7 @@ export default async function handler(
             const id = 1
             const range = `${id}!A:J`
             const response = await sheets.spreadsheets.values.get({
-                spreadsheetId: credentials.sheet_id,
+                //spreadsheetId: credentials.sheet_id,
                 range
             }) 
             
@@ -107,7 +107,7 @@ export default async function handler(
 
 
             const response = await sheets.spreadsheets.values.update({
-                spreadsheetId: credentials.sheet_id,
+                //spreadsheetId: credentials.sheet_id,
                 range,
                 valueInputOption: 'USER_ENTERED',
                 requestBody: {
@@ -142,7 +142,7 @@ export default async function handler(
             const sheets = google.sheets({ version: 'v4', auth })
 
             const response = await sheets.spreadsheets.batchUpdate({
-                spreadsheetId: credentials.sheet_id,
+                //spreadsheetId: credentials.sheet_id,
                 requestBody: {
                     "requests" : [
                         {
