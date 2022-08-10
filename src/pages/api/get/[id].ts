@@ -1,8 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import { google } from 'googleapis'
-import credentials from '../../../../credentialsDrive.json'
-import useAuth from '../../../data/hook/useAuth'
-import { title } from 'process'
+//import credentials from '../../../../credentialsDrive.json'
 
 
 //DATA	COMPANY	TICKER	PROFIT_PERCENT	PROFIT_ABSOLUTE	PRICE	BUY_PRICE	SHARES	INVESTED_VALUE	CURRENT
@@ -26,26 +24,29 @@ export default async function handler(
   res: NextApiResponse
 ) {
 
+
   if (req.method === 'GET') {
         try {
-
-            const auth = new google.auth.GoogleAuth({
-                keyFile: "credentialsDrive.json",
-                scopes: [
-                    "https://www.googleapis.com/auth/drive",
-                    "https://www.googleapis.com/auth/drive.file",
-                    "https://www.googleapis.com/auth/spreadsheets",
-                ]
-            });
-
-            const sheets = google.sheets({ version: 'v4', auth })
+             const scopes = [
+                "https://www.googleapis.com/auth/drive",
+                "https://www.googleapis.com/auth/drive.file",
+                "https://www.googleapis.com/auth/spreadsheets",
+            ]
+            const client = new google.auth.JWT(
+                process.env.NEXT_PUBLIC_CLIENT_EMAIL,
+                null,
+                process.env.NEXT_PUBLIC_JWT_PRIVATE_KEY.replace(/\\n/gm, '\n'),
+                scopes,  
+            ); 
+            const sheets = google.sheets({ version: 'v4', auth:client })            
             const {id} = req.query
             const range = `${id}!A:J`
             const response = await sheets.spreadsheets.values.get({
-                spreadsheetId: credentials.sheet_id,
+                spreadsheetId: process.env.NEXT_PUBLIC_SHEET_ID,
                 range
             }) 
-           
+            
+            
             const rows = response.data.values 
             
             return res.status(200).json({
@@ -53,19 +54,22 @@ export default async function handler(
             })
         }
         catch (e) {
-            const auth = new google.auth.GoogleAuth({
-                keyFile: "credentialsDrive.json",
-                scopes: [
-                    "https://www.googleapis.com/auth/drive",
-                    "https://www.googleapis.com/auth/drive.file",
-                    "https://www.googleapis.com/auth/spreadsheets",
-                ]
-            });
-
-            const sheets = google.sheets({ version: 'v4', auth })
+            const scopes = [
+                "https://www.googleapis.com/auth/drive",
+                "https://www.googleapis.com/auth/drive.file",
+                "https://www.googleapis.com/auth/spreadsheets",
+            ]
+            const client = new google.auth.JWT(
+                process.env.NEXT_PUBLIC_CLIENT_EMAIL,
+                null,
+                process.env.NEXT_PUBLIC_JWT_PRIVATE_KEY.replace(/\\n/gm, '\n'),
+                scopes,
+            ); 
+            const sheets = google.sheets({ version: 'v4', auth:client })
             const {id} = req.query
+
             const response = await sheets.spreadsheets.batchUpdate({
-                spreadsheetId: credentials.sheet_id,
+                spreadsheetId: process.env.NEXT_PUBLIC_SHEET_ID,
                 requestBody: {
                     "requests" : [
                         {
@@ -86,8 +90,9 @@ export default async function handler(
                     ]
                 }
             })
+            
             const values = await sheets.spreadsheets.values.update({
-                spreadsheetId: credentials.sheet_id,
+                spreadsheetId: process.env.NEXT_PUBLIC_SHEET_ID,
                 range:`${id}!A1:J1`,
                 valueInputOption: 'USER_ENTERED',
                 requestBody: {

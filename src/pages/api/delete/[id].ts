@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import { google } from 'googleapis'
-import credentials from '../../../../credentialsDrive.json'
+
 
 
 
@@ -25,19 +25,22 @@ export default async function handler(
 )  
 {try {
     const body = req.body as SheetForm
-    const auth = new google.auth.GoogleAuth({
-        keyFile: "credentialsDrive.json",
-        scopes: [
-            "https://www.googleapis.com/auth/drive",
-            "https://www.googleapis.com/auth/drive.file",
-            "https://www.googleapis.com/auth/spreadsheets",
-        ]
-    });
+    const scopes = [
+        "https://www.googleapis.com/auth/drive",
+        "https://www.googleapis.com/auth/drive.file",
+        "https://www.googleapis.com/auth/spreadsheets",
+    ]
+    const client = new google.auth.JWT(
+        process.env.NEXT_PUBLIC_CLIENT_EMAIL,
+        null,
+        process.env.NEXT_PUBLIC_JWT_PRIVATE_KEY.replace(/\\n/gm, '\n'),
+        scopes,  
+    );
     const range = body.range
     const {id} = req.query
-    const sheets = google.sheets({ version: 'v4', auth })
+    const sheets = google.sheets({ version: 'v4', auth:client })
     const getSheetId = await sheets.spreadsheets.get({
-        spreadsheetId: credentials.sheet_id
+        spreadsheetId: process.env.NEXT_PUBLIC_SHEET_ID
     })
     let sheetId 
     getSheetId.data.sheets?.map(sheet => {
@@ -47,7 +50,7 @@ export default async function handler(
     })
 
     const response = await sheets.spreadsheets.batchUpdate({
-        spreadsheetId: credentials.sheet_id,
+        spreadsheetId: process.env.NEXT_PUBLIC_SHEET_ID,
         requestBody: {
             "requests" : [
                 {

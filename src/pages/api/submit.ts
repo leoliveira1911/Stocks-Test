@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import { google } from 'googleapis'
-import credentials from '../../../credentialsDrive.json'
-import useAuth from '../../data/hook/useAuth'
+//import credentials from '../../../credentialsDrive.json'
+
 
 
 //DATA	COMPANY	TICKER	PROFIT_PERCENT	PROFIT_ABSOLUTE	PRICE	BUY_PRICE	SHARES	INVESTED_VALUE	CURRENT

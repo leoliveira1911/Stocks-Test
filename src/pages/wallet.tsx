@@ -1,7 +1,5 @@
-import { google } from 'googleapis'
 import { FormEvent, useEffect, useState } from 'react'
 import { clearInterval, setInterval } from 'timers';
-import credentials from '../../credentialsDrive.json'
 import Table from '../components/Table';
 import Form from '../components/Form'
 import useAuth from '../data/hook/useAuth';
@@ -104,13 +102,13 @@ export default function Post() {
             date,
             company,
             ticker,
-            profitPercent: `=(G${row + 1}-F${row + 1})/G${row + 1}*(-1)`,
-            profitAbsolute: `=(F${row + 1}-G${row + 1})*H${row + 1}`,
-            price: `=GOOGLEFINANCE(C${row + 1})`,
-            buyPrice,
+            profitPercent: `=FIXED((G${row + 1}-F${row + 1})/G${row + 1}*(-100);2)`,
+            profitAbsolute: `=FIXED((F${row + 1}-G${row + 1})*H${row + 1};2)`,
+            price: `=FIXED(GOOGLEFINANCE(C${row + 1});2)`,
+            buyPrice: `=FIXED(${buyPrice};2)`,
             shares,
-            investedValue: `=H${row + 1}*G${row + 1}`,
-            current: `=H${row + 1}*F${row + 1}`,
+            investedValue: `=FIXED(H${row + 1}*G${row + 1};2)`,
+            current: `=FIXED(H${row + 1}*F${row + 1} ;2)`,
             range: `${userUID}!A${row + 1}:J${row + 1}`
         }
 

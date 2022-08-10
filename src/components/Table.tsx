@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { EditIcon, DeleteIcon ,VisibleIcon } from '../icons'
-import Button from './Button'
+
 
 
 interface TableProps {
