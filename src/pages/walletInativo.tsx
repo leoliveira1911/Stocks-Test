@@ -1,7 +1,7 @@
 import { google } from 'googleapis'
 import { FormEvent, useEffect, useState } from 'react'
 import { setInterval } from 'timers';
-import credentials from '../../credentialsDrive.json'
+//import credentials from '../../credentialsDrive.json'
 import Table from '../components/Table';
 import Form from '../components/Form'
 //import useAuth from '../data/hook/useAuth';
@@ -21,7 +21,7 @@ export async function getServerSideProps() {
     const range = `1!A:J`
 
     const response = await sheets.spreadsheets.values.get({
-        spreadsheetId: credentials.sheet_id,
+       // spreadsheetId: credentials.sheet_id,
         range
     })
 
