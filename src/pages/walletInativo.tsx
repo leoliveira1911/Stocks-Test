@@ -4,15 +4,41 @@ import { setInterval } from 'timers';
 import credentials from '../../credentialsDrive.json'
 import Table from '../components/Table';
 import Form from '../components/Form'
-import useAuth from '../data/hook/useAuth';
+//import useAuth from '../data/hook/useAuth';
 import Button from '../components/Button';
 import Layout from '../components/template/Layout';
+import GoogleSpreadsheet from 'google-spreadsheet';
 
-
-
-
-export default function Post() {
+export async function getServerSideProps() {
     
+    const auth = new google.auth.GoogleAuth({
+        keyFile: "credentialsDrive.json",
+        scopes: "https://www.googleapis.com/auth/spreadsheets"
+    });
+
+    const sheets = google.sheets({ version: 'v4', auth })
+
+    const range = `1!A:J`
+
+    const response = await sheets.spreadsheets.values.get({
+        spreadsheetId: credentials.sheet_id,
+        range
+    })
+
+    const rows = response.data.values
+
+    return {
+        props: {
+            rows,
+        }
+    }
+
+}
+
+
+
+export default function Post({ rows }) {
+
     const [addStockForm, setAddStockForm] = useState('hide')
     const [updateRow, setUpdateRow] = useState(0)
     const [updateStockForm, setUpdateStockForm] = useState('hide')
@@ -21,13 +47,10 @@ export default function Post() {
     const [ticker, setTicker] = useState('')
     const [buyPrice, setBuyPrice] = useState('')
     const [shares, setShares] = useState('')
-    const [stocks, setStocks] = useState()
+    const [stocks, setStocks] = useState(rows)
     const [values, setValues] = useState<{ profitPercent, invested, current, absolute, rowCount }>()
-    const [userUid, setUserUid] = useState<string | undefined>('')
 
-    
 
-    
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         console.log(e)
@@ -67,16 +90,14 @@ export default function Post() {
 
         handleGet()
     }
-    const autentication = useAuth()
-    const userUID = autentication.user?.uid
 
     const handleGet = async () => {
 
-        const response = await fetch(`/api/get/${userUID == undefined ? '1' : userUid}`, {
+        const response = await fetch('/api/submit', {
             method: 'GET',
             headers: {
                 'Accept': 'application/json',
-                'Content-Type': 'application/json',
+                'Content-Type': 'application/json'
             },
         })
 
@@ -174,7 +195,7 @@ export default function Post() {
         let invested = 0
         let current = 0
         let rowCount = 0
-        data?.map((el) => {
+        data.map((el) => {
             if (el[0] != "" && el[0] != 'DATA') {
                 let stringInvestedBeforeTreat = el[8]
                 let stringInvestedAfterTreat = stringInvestedBeforeTreat.replace('R$', '').replace('.', '').replace(',', '.').replace(' ', '')
@@ -201,43 +222,16 @@ export default function Post() {
         }
         setValues(values)
     }
-    
-    
-    const getSheetId = async () => {
-    
-        const response = await fetch(`/api/test/${userUID}`, {
-            method: 'GET',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-            },
-    
-        })
-    
-        const content = await response.json()
-        setUserUid(userUID)
-
-        //handleGet()
-    }
 
     useEffect(() => {
         return () => {
-            handleGet()
+            calcValues(rows)
             setInterval(() => {
                 handleGet()
-            }, 100000)
+            }, 60000)
         }
 
-    }, [getSheetId])
-/*     useEffect(() => {
-        return () => {
-         
-            setInterval(() => {
-                getSheetId()
-            }, 5000)
-        }
-
-    }, []) */
+    }, [])
 
     return (
 
@@ -283,7 +277,7 @@ export default function Post() {
                             ></Form>
                         ) : (null)}
                     </div>
-                            <Button label={'teste'} onClick={()=> {getSheetId()}}></Button>
+
                 </div>
 
 

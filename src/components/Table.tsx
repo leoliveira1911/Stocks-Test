@@ -25,16 +25,16 @@ export default function Table(props: TableProps) {
                     <tr key={index} className={`
                     ${index % 2 === 0 ? 'bg-gray-900' : 'bg-gray-600'}
                     `}>
-                        <td className={`text-center px-3`} >{el[0]}</td>
-                        <td className={`text-center px-3`} >{el[1]}</td>
-                        <td className={`text-center px-3`} >{el[2]}</td>
-                        <td className={`text-center px-3`} >{el[3]}</td>
-                        <td className={`text-center px-3`} >{el[4]}</td>
-                        <td className={`text-center px-3`} >{el[5]}</td>
-                        <td className={`text-center px-3`} >{el[6]}</td>
-                        <td className={`text-center px-3`} >{el[7]}</td>
-                        <td className={`text-center px-3`} >{el[8]}</td>
-                        <td className={`text-center px-3`} >{el[9]}</td>
+                        <td className={`text-center px-3`} >{el[5] == '#N/A' ? 'TICKER INVÁLIDO' : `${el[0]}`}</td>
+                        <td className={`text-center px-3`} >{el[5] == '#N/A' ? 'TICKER INVÁLIDO' : `${el[1]}`}</td>
+                        <td className={`text-center px-3`} >{el[5] == '#N/A' ? 'TICKER INVÁLIDO' : `${el[2]}`}</td>
+                        <td className={`text-center px-3`} >{el[3] == '#N/A' ? 'TICKER INVÁLIDO' : `${el[3]}%`}</td>
+                        <td className={`text-center px-3`} >{el[4] == '#N/A' ? 'TICKER INVÁLIDO' : parseFloat(el[4])>=0 ? `R$${el[4]}` : el[4].substr(0,1).concat('R$').concat(el[4].substr(1))}</td>
+                        <td className={`text-center px-3`} >{el[5] == '#N/A' ? 'TICKER INVÁLIDO' : `R$${el[5]}`}</td>
+                        <td className={`text-center px-3`} >{el[5] == '#N/A' ? 'TICKER INVÁLIDO' : `R$${el[6]}`}</td>
+                        <td className={`text-center px-3`} >{el[5] == '#N/A' ? 'TICKER INVÁLIDO' : `${el[7]}`}</td>
+                        <td className={`text-center px-3`} >{el[5] == '#N/A' ? 'TICKER INVÁLIDO' : `R$${el[8]}`}</td>
+                        <td className={`text-center px-3`} >{el[9] == '#N/A' ? 'TICKER INVÁLIDO' : `R$${el[9]}`}</td>
                         <td className={`text-center px-3`}>
 
                             <div onClick={() => props.update(index)} className={`

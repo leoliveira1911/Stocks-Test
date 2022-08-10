@@ -1,44 +1,18 @@
 import { google } from 'googleapis'
 import { FormEvent, useEffect, useState } from 'react'
-import { setInterval } from 'timers';
+import { clearInterval, setInterval } from 'timers';
 import credentials from '../../credentialsDrive.json'
 import Table from '../components/Table';
 import Form from '../components/Form'
-//import useAuth from '../data/hook/useAuth';
+import useAuth from '../data/hook/useAuth';
 import Button from '../components/Button';
 import Layout from '../components/template/Layout';
-import GoogleSpreadsheet from 'google-spreadsheet';
 
-export async function getServerSideProps() {
+
+
+
+export default function Post() {
     
-    const auth = new google.auth.GoogleAuth({
-        keyFile: "credentialsDrive.json",
-        scopes: "https://www.googleapis.com/auth/spreadsheets"
-    });
-
-    const sheets = google.sheets({ version: 'v4', auth })
-
-    const range = `1!A:J`
-
-    const response = await sheets.spreadsheets.values.get({
-        spreadsheetId: credentials.sheet_id,
-        range
-    })
-
-    const rows = response.data.values
-
-    return {
-        props: {
-            rows,
-        }
-    }
-
-}
-
-
-
-export default function Post({ rows }) {
-
     const [addStockForm, setAddStockForm] = useState('hide')
     const [updateRow, setUpdateRow] = useState(0)
     const [updateStockForm, setUpdateStockForm] = useState('hide')
@@ -47,10 +21,16 @@ export default function Post({ rows }) {
     const [ticker, setTicker] = useState('')
     const [buyPrice, setBuyPrice] = useState('')
     const [shares, setShares] = useState('')
-    const [stocks, setStocks] = useState(rows)
+    const [stocks, setStocks] = useState()
     const [values, setValues] = useState<{ profitPercent, invested, current, absolute, rowCount }>()
+   
 
 
+    const autentication = useAuth()
+    const userUID = autentication.user?.uid
+    //console.log('UID' , userUID)
+    
+    
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         console.log(e)
@@ -59,16 +39,16 @@ export default function Post({ rows }) {
             date,
             company,
             ticker,
-            profitPercent: `=(G${values.rowCount + 2}-F${values.rowCount + 2})/G${values.rowCount + 2}*(-1)`,
-            profitAbsolute: `=(F${values.rowCount + 2}-G${values.rowCount + 2})*H${values.rowCount + 2}`,
-            price: `=GOOGLEFINANCE(C${values.rowCount + 2})`,
-            buyPrice,
+            profitPercent: `=ROUND((G${values.rowCount + 2}-F${values.rowCount + 2})/G${values.rowCount + 2}*(-100);2)`,
+            profitAbsolute: `=FIXED((F${values.rowCount + 2}-G${values.rowCount + 2})*H${values.rowCount + 2};2)`,
+            price: `=FIXED(GOOGLEFINANCE(C${values.rowCount + 2}) ;2 )`,
+            buyPrice: `=FIXED(${buyPrice};2)`,
             shares,
-            investedValue: `=H${values.rowCount + 2}*G${values.rowCount + 2}`,
-            current: `=H${values.rowCount + 2}*F${values.rowCount + 2}`
+            investedValue: `=FIXED(H${values.rowCount + 2}*G${values.rowCount + 2}; 2)`,
+            current: `=FIXED(H${values.rowCount + 2}*F${values.rowCount + 2} ; 2)`
         }
 
-        const response = await fetch('/api/submit', {
+        const response = await fetch(`/api/submit/${userUID}`, {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',
@@ -91,17 +71,20 @@ export default function Post({ rows }) {
         handleGet()
     }
 
+  
+
     const handleGet = async () => {
 
-        const response = await fetch('/api/submit', {
+        const response = await fetch(`/api/get/${userUID}`, {
             method: 'GET',
             headers: {
                 'Accept': 'application/json',
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
             },
         })
 
         const content = await response.json()
+        //console.log(content)
         const stock = await content.data
 
         setStocks(stock)
@@ -128,10 +111,10 @@ export default function Post({ rows }) {
             shares,
             investedValue: `=H${row + 1}*G${row + 1}`,
             current: `=H${row + 1}*F${row + 1}`,
-            range: `A${row + 1}:J${row + 1}`
+            range: `${userUID}!A${row + 1}:J${row + 1}`
         }
 
-        const response = await fetch('/api/submit', {
+        const response = await fetch(`/api/update/${userUID}`, {
             method: 'PUT',
             headers: {
                 'Accept': 'application/json',
@@ -163,7 +146,7 @@ export default function Post({ rows }) {
             range: `${e + 1}`
         }
 
-        const response = await fetch('/api/submit', {
+        const response = await fetch(`/api/delete/${userUID}`, {
             method: 'DELETE',
             headers: {
                 'Accept': 'application/json',
@@ -195,8 +178,8 @@ export default function Post({ rows }) {
         let invested = 0
         let current = 0
         let rowCount = 0
-        data.map((el) => {
-            if (el[0] != "" && el[0] != 'DATA') {
+        data?.map((el) => {
+            if (el[0] != "" && el[0] != 'DATE') {
                 let stringInvestedBeforeTreat = el[8]
                 let stringInvestedAfterTreat = stringInvestedBeforeTreat.replace('R$', '').replace('.', '').replace(',', '.').replace(' ', '')
                 let valueInvested = parseFloat(stringInvestedAfterTreat)
@@ -222,16 +205,27 @@ export default function Post({ rows }) {
         }
         setValues(values)
     }
+    
+    
+
 
     useEffect(() => {
-        return () => {
-            calcValues(rows)
-            setInterval(() => {
-                handleGet()
-            }, 60000)
-        }
+        if(userUID) {
+          handleGet()
+        }    
+        const id = setInterval(() => {
+            console.log(new Date)
+            console.log('UID' , userUID )
+            handleGet()
+            //setBrunaoDaMassa(brunaoDaMassa + 1)
+            //console.log(brunaoDaMassa)
+            //ExibirUserId()
+        }, 60000)
 
-    }, [])
+        return () => {
+            clearInterval(id)
+        }
+    }, [autentication.user])
 
     return (
 
@@ -277,7 +271,7 @@ export default function Post({ rows }) {
                             ></Form>
                         ) : (null)}
                     </div>
-
+                           {/*  <Button label={'teste'} onClick={()=> setUserValue()}></Button> */}
                 </div>
 
 

@@ -43,9 +43,9 @@ export default async function handler(
       response.data.sheets?.map(sheet => {
         const sheetTitle = sheet.properties.title
         if (id == sheetTitle) {
-          return res.status(200).json({
-            data: sheet
-        })
+        /*   return res.status(200).json({
+            data: sheet */
+       // })
         }
   
       })
