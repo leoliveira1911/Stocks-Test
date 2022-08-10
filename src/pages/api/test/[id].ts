@@ -38,7 +38,7 @@ export default async function handler(
       });
       const sheets = google.sheets({ version: 'v4', auth })
       const response = await sheets.spreadsheets.get({
-        spreadsheetId: credentials.sheet_id,
+        //spreadsheetId: credentials.sheet_id,
       })
       response.data.sheets?.map(sheet => {
         const sheetTitle = sheet.properties.title
