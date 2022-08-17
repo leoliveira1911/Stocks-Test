@@ -40,7 +40,7 @@ export default function Autentication() {
             w-1/2
             hidden md:block lg:w-2/3
             `}>
-                <img src="https://source.unsplash.com/random" alt="Imagem Tela de Autenticação"
+                <img src="https://img.freepik.com/fotos-premium/mercado-de-acoes-ou-grafico-de-negociacao-forex_73426-194.jpg?w=1380" alt="Imagem Tela de Autenticação"
                     className={`
                 h-screen w-full object-cover`}
                 />
