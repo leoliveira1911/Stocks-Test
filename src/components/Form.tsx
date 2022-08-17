@@ -34,7 +34,7 @@ export default function Form (props: FormProps) {
     return(
         <div className={`
         flex flex-col items-center justify-center m-2 p-3 rounded-2xl overflow-hidden
-        bg-gray-900 
+        bg-gray-200 dark:text-gray-200 dark:bg-gray-900 
         `}>
                 <h3 className={`
                          p-1 font-bold text-xl

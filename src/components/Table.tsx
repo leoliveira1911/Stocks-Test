@@ -21,9 +21,9 @@ export default function Table(props: TableProps) {
     function renderData(data) {
         return data?.map((el, index) => {
             if (el[0] != "" && index > 0)
-                return (
+                return ( 
                     <tr key={index} className={`
-                    ${index % 2 === 0 ? 'bg-gray-900' : 'bg-gray-600'}
+                    ${index % 2 === 0 ? 'bg-gray-200 dark:text-gray-200 dark:bg-gray-900 ' : 'bg-gray-300  dark:bg-gray-600'}
                     `}>
                         <td className={`text-center px-3`} >{el[5] == '#N/A' ? 'TICKER INVÁLIDO' : `${el[0]}`}</td>
                         <td className={`text-center px-3`} >{el[5] == '#N/A' ? 'TICKER INVÁLIDO' : `${el[1]}`}</td>
@@ -87,7 +87,7 @@ export default function Table(props: TableProps) {
             
             <h2 className={`font-bold text-4xl m-3`}>Valor da carteira : R$ {renderWalletValue()} </h2>
             <table className={`rounded-xl overflow-hidden mx-4`}>
-                <thead className={`bg-gray-900 py-2`}>
+                <thead className={`bg-gray-200 dark:text-gray-200 dark:bg-gray-900  py-2`}>
                     <tr>
                         <th className={`p-3`} >Data de Compra </th>
                         <th className={`p-3`} >Empresa </th>
