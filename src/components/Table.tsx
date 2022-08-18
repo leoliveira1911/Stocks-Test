@@ -82,7 +82,7 @@ export default function Table(props: TableProps) {
 
     return (
         <div className={`
-        flex flex-col justify-center items-center w-full
+        flex flex-col justify-center items-center w-full text-center
         `}>
             
             <h2 className={`font-bold text-4xl m-3`}>Valor da carteira : R$ {renderWalletValue()} </h2>
