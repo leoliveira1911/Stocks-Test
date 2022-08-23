@@ -40,7 +40,7 @@ export default async function handler(
             ); 
             const sheets = google.sheets({ version: 'v4', auth:client })            
             const {id} = req.query
-            const range = `${id}!A:J`
+            const range = `${id}!A:K`
             const response = await sheets.spreadsheets.values.get({
                 spreadsheetId: process.env.NEXT_PUBLIC_SHEET_ID,
                 range
@@ -79,7 +79,7 @@ export default async function handler(
                                 "title": `${id}`,                                
                                 "gridProperties": {
                                   "rowCount": 1000,
-                                  "columnCount": 10,
+                                  "columnCount": 11,
                                   
                                 },
                                 
@@ -93,12 +93,12 @@ export default async function handler(
             
             const values = await sheets.spreadsheets.values.update({
                 spreadsheetId: process.env.NEXT_PUBLIC_SHEET_ID,
-                range:`${id}!A1:J1`,
+                range:`${id}!A1:K1`,
                 valueInputOption: 'USER_ENTERED',
                 requestBody: {
                     //DATA	COMPANY	TICKER	PROFIT_PERCENT	PROFIT_ABSOLUTE	PRICE	BUY_PRICE	SHARES	INVESTED_VALUE	CURRENT
                     values: [
-                        ['DATE', 'COMPANY', 'TICKER', 'PROFITPERCENT', 'PROFIT ABSOLUTE', 'PRICE', 'BUYPRICE', 'SHARES', 'INVESTEDVALUE', 'CURRENT']
+                        ['DATE', 'COMPANY', 'TICKER', 'PROFITPERCENT', 'PROFIT ABSOLUTE', 'PRICE', 'BUYPRICE', 'SHARES', 'INVESTEDVALUE', 'CURRENT' , 'TYPE']
                     ]
     
                 }

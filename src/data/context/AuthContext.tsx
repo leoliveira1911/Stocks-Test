@@ -75,6 +75,7 @@ export function AuthProvider(props) {
             )
 
             await setUpSession(resp.user)
+            
             route.push('/')
         } finally {
             setLoading(false)

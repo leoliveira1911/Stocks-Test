@@ -9,6 +9,7 @@ setCompany:(e)=>void
 setTicker:(e)=>void
 setBuyPrice:(e)=>void
 setShares:(e)=>void
+setType:(e)=>void
 }
 
 export default function Form (props: FormProps) {
@@ -19,6 +20,7 @@ export default function Form (props: FormProps) {
     const [ticker, setTicker] = useState('')
     const [buyPrice, setBuyPrice] = useState('')
     const [shares, setShares] = useState('')
+    const [type, setType] = useState('')
 
 
     function resetValues(){
@@ -69,6 +71,34 @@ export default function Form (props: FormProps) {
                     `}>
                         <label htmlFor='shares'> Número de ações </label>
                         <input placeholder="100" className={`text-black rounded-md px-2 py-1`} required value={shares} onChange={e => {props.setShares(e.target.value) ; setShares(e.target.value)}} type="text" name="shares" id="shares" />
+                    </div>
+                    <div className={`
+                        flex flex-col p-1 font-semibold
+                    `}>
+                        <div>
+                        <input type="radio" id="acao" name="type" value="acao" onClick={()=>props.setType('acao')}/>
+                        <label htmlFor="html">Ação</label> 
+                        </div>
+                        <div>
+                        <input type="radio" id="etf" name="type" value="etf" onClick={()=>props.setType('etf')}/>
+                        <label htmlFor="css">ETF</label>
+                        </div>
+                        <div>
+                        <input type="radio" id="fii" name="type" value="fii" onClick={()=>props.setType('fii')}/>
+                        <label htmlFor="javascript">FII</label>
+                        </div>
+                        <div>
+                        <input type="radio" id="fmmercado" name="type" value="fmmercado"onClick={()=>props.setType('fmmercado')}/>
+                        <label htmlFor="javascript">Fundo Multi Mercado</label>
+                        </div>
+                        <div>
+                        <input type="radio" id="facao" name="type" value="facao"onClick={()=>props.setType('facao')}/>
+                        <label htmlFor="javascript">Fundo de ações</label>
+                        </div>
+                        <div>
+                        <input type="radio" id="commodities" name="type" value="commodities"onClick={()=>props.setType('commodities')}/>
+                        <label htmlFor="commodities">Fundo de ações</label>
+                        </div>
                     </div>
                     <div className={`
                     flex justify-center

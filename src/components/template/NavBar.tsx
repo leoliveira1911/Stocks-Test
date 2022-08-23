@@ -12,7 +12,7 @@ export default function NavBar(props:NavBarProps) {
 
     return (
         <aside className={`
-        flex flex-col
+        flex flex-col text-center
       bg-gray-200 dark:text-gray-900
         dark:bg-gray-900 
         `}>
@@ -25,7 +25,7 @@ export default function NavBar(props:NavBarProps) {
             </div>
             <ul className='flex-grow'>
                 <MenuItem url='/' text='Início' icon={HomeIcon}/>
-                <MenuItem url='/settings' text='Settings' icon={SettingsIcon}/>
+                <MenuItem url='/assetAllocation' text='Asset Allocation' icon={SettingsIcon}/>
                 <MenuItem url='/news' text='News' icon={BellIcon}/>
                 <MenuItem url='/wallet' text='Wallet' icon={WalletIcon}/>
             </ul>

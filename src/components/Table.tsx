@@ -30,7 +30,7 @@ export default function Table(props: TableProps) {
                         <td className={`sm:hidden third:table-cell text-center px-3`} >{el[5] == '#N/A' ? 'TICKER INVÁLIDO' : `${el[2]}`}</td>
                         <td className={`text-center px-3`} >{el[3] == '#N/A' ? 'TICKER INVÁLIDO' : `${el[3]}%`}</td>
                         <td className={`sm:hidden second:table-cell text-center px-3`} >{el[4] == '#N/A' ? 'TICKER INVÁLIDO' : parseFloat(el[4])>=0 ? `R$${el[4]}` : el[4].substr(0,1).concat('R$').concat(el[4].substr(1))}</td>
-                        <td className={`sm:hidden text-center px-3`} >{el[5] == '#N/A' ? 'TICKER INVÁLIDO' : `R$${el[5]}`}</td>
+                        <td className={`sm:hidden fifth:table-cell text-center px-3`} >{el[5] == '#N/A' ? 'TICKER INVÁLIDO' : `R$${el[5]}`}</td>
                         <td className={`sm:hidden fourth:table-cell text-center px-3`} >{el[5] == '#N/A' ? 'TICKER INVÁLIDO' : `R$${el[6]}`}</td>
                         <td className={`sm:hidden sixth:table-cell text-center px-3`} >{el[5] == '#N/A' ? 'TICKER INVÁLIDO' : `${el[7]}`}</td>
                         <td className={`sm:hidden fifth:table-cell text-center px-3`} >{el[5] == '#N/A' ? 'TICKER INVÁLIDO' : `R$${el[8]}`}</td>
@@ -94,7 +94,7 @@ export default function Table(props: TableProps) {
                         <th className={`sm:hidden third:table-cell p-3`} >Ticker </th>
                         <th className={`p-3`} >Lucro % </th>
                         <th className={`sm:hidden second:table-cell p-3`} >Lucro Bruto </th>
-                        <th className={`sm:hidden p-3`} >Cotação atual </th>
+                        <th className={`sm:hidden fifth:table-cell p-3`} >Cotação atual </th>
                         <th className={`sm:hidden fourth:table-cell p-3`} >Preço de compra </th>
                         <th className={`sm:hidden sixth:table-cell p-3`} >Numero de Ações </th>
                         <th className={`sm:hidden fifth:table-cell p-3`} >Valor Investido </th>
@@ -110,7 +110,7 @@ export default function Table(props: TableProps) {
                         <td className={`sm:hidden third:table-cell text-center text-lg font-bold`} ></td>
                         <td className={`text-center text-lg font-bold`} >{props.values?.profitPercent}%</td>
                         <td className={`sm:hidden second:table-cell text-center text-lg font-bold`} >R$ {props.values?.absolute}</td>
-                        <td className={`sm:hidden text-center text-lg font-bold`} ></td>
+                        <td className={`sm:hidden fifth:table-cell text-center text-lg font-bold`} ></td>
                         <td className={`sm:hidden fourth:table-cell text-center text-lg font-bold`} ></td>
                         <td className={`sm:hidden sixth:table-cell text-center text-lg font-bold`} ></td>
                         <td className={`sm:hidden fifth:table-cell text-center text-lg font-bold`} >{props.values?.invested}</td>

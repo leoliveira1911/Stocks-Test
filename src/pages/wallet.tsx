@@ -10,7 +10,7 @@ import Layout from '../components/template/Layout';
 
 
 export default function Post() {
-    
+
     const [addStockForm, setAddStockForm] = useState('hide')
     const [updateRow, setUpdateRow] = useState(0)
     const [updateStockForm, setUpdateStockForm] = useState('hide')
@@ -19,16 +19,17 @@ export default function Post() {
     const [ticker, setTicker] = useState('')
     const [buyPrice, setBuyPrice] = useState('')
     const [shares, setShares] = useState('')
+    const [type, setType] = useState('')
     const [stocks, setStocks] = useState()
     const [values, setValues] = useState<{ profitPercent, invested, current, absolute, rowCount }>()
-   
+
 
 
     const autentication = useAuth()
     const userUID = autentication.user?.uid
     //console.log('UID' , userUID)
-    
-    
+
+
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         console.log(e)
@@ -43,7 +44,8 @@ export default function Post() {
             buyPrice: `=FIXED(${buyPrice};2)`,
             shares,
             investedValue: `=FIXED(H${values.rowCount + 2}*G${values.rowCount + 2}; 2)`,
-            current: `=FIXED(H${values.rowCount + 2}*F${values.rowCount + 2} ; 2)`
+            current: `=FIXED(H${values.rowCount + 2}*F${values.rowCount + 2} ; 2)`,
+            type
         }
 
         const response = await fetch(`/api/submit/${userUID}`, {
@@ -65,11 +67,12 @@ export default function Post() {
         setTicker('')
         setBuyPrice('')
         setShares('')
+        setType('')
 
         handleGet()
     }
 
-  
+
 
     const handleGet = async () => {
 
@@ -98,6 +101,7 @@ export default function Post() {
 
     const updateStock = async (e: FormEvent<HTMLFormElement>, row) => {
         e.preventDefault()
+
         const form = {
             date,
             company,
@@ -109,7 +113,8 @@ export default function Post() {
             shares,
             investedValue: `=FIXED(H${row + 1}*G${row + 1};2)`,
             current: `=FIXED(H${row + 1}*F${row + 1} ;2)`,
-            range: `${userUID}!A${row + 1}:J${row + 1}`
+            type: e.type,
+            range: `${userUID}!A${row + 1}:K${row + 1}`
         }
 
         const response = await fetch(`/api/update/${userUID}`, {
@@ -130,6 +135,7 @@ export default function Post() {
         setTicker('')
         setBuyPrice('')
         setShares('')
+        setType('')
         setUpdateRow(0)
         setUpdateStockForm('hide')
 
@@ -203,17 +209,17 @@ export default function Post() {
         }
         setValues(values)
     }
-    
-    
+
+
 
 
     useEffect(() => {
-        if(userUID) {
-          handleGet()
-        }    
+        if (userUID) {
+            handleGet()
+        }
         const id = setInterval(() => {
             console.log(new Date)
-            console.log('UID' , userUID )
+            console.log('UID', userUID)
             handleGet()
             //setBrunaoDaMassa(brunaoDaMassa + 1)
             //console.log(brunaoDaMassa)
@@ -251,6 +257,7 @@ export default function Post() {
                                 setDate={(e) => setDate(e)}
                                 setTicker={(e) => setTicker(e)}
                                 setShares={(e) => setShares(e)}
+                                setType={(e) => setType(e)}
                                 submit={(e) => handleSubmit(e)}
 
                             ></Form>
@@ -265,11 +272,12 @@ export default function Post() {
                                 setDate={(e) => setDate(e)}
                                 setTicker={(e) => setTicker(e)}
                                 setShares={(e) => setShares(e)}
+                                setType={(e) => setType(e)}
                                 submit={(e) => updateStock(e, updateRow)}
                             ></Form>
                         ) : (null)}
                     </div>
-                           {/*  <Button label={'teste'} onClick={()=> setUserValue()}></Button> */}
+                    {/*  <Button label={'teste'} onClick={()=> setUserValue()}></Button> */}
                 </div>
 
 

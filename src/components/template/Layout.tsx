@@ -18,7 +18,7 @@ export default function Layout(props: LayoutProps) {
         <RequireAuth>
         <div className={`
         flex
-        h-screen
+        min-h-screen
         w-screen
         ${ctx.theme} 
         `}>
@@ -28,6 +28,7 @@ export default function Layout(props: LayoutProps) {
             flex
             flex-col
             w-full
+            min-h-screen
             p-7
             bg-gray-300 dark:bg-gray-800
 
