@@ -259,17 +259,19 @@ export default function Post({ rows }) {
                                 setDate={(e) => setDate(e)}
                                 setTicker={(e) => setTicker(e)}
                                 setShares={(e) => setShares(e)}
+                                setType={()=>setDate}
                                 submit={(e) => handleSubmit(e)}
-
-                            ></Form>
-                        ) : (null)}
+                                
+                                ></Form>
+                                ) : (null)}
 
                         {updateStockForm === 'show' ? (
-
+                            
                             <Form
-                                action='Atualizar Ação'
-                                setBuyPrice={(e) => setBuyPrice(e)}
-                                setCompany={(e) => setCompany(e)}
+                            action='Atualizar Ação'
+                            setBuyPrice={(e) => setBuyPrice(e)}
+                            setCompany={(e) => setCompany(e)}
+                            setType={()=>setDate}
                                 setDate={(e) => setDate(e)}
                                 setTicker={(e) => setTicker(e)}
                                 setShares={(e) => setShares(e)}

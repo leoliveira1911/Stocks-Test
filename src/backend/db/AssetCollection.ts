@@ -6,7 +6,7 @@ import firebase from '../../firebase/config'
 export default class AssetCollection implements AssetRepo {
 
 
-    #conversor = {
+   /*  #conversor = {
         toFirestore(asset: Asset) {
             return {
                 acoes: asset.acoes,
@@ -23,12 +23,12 @@ export default class AssetCollection implements AssetRepo {
 
             return new Asset(data.user , data.acoes, data.etf, data.fimobiliario, data.fmmercado, data.facoes , data.commodities)
         }
-    }
+    } */
 
     async save(asset: Asset): Promise<Asset> {
         if (!asset.id) {
 
-            const doc = await this.collection().doc(asset.user).collection('assets').add({
+            const doc = await firebase.firestore().collection('users').doc(asset.user).collection('assets').add({
                 acoes: asset.acoes,
                 etf: asset.etf,
                 fimobiliario: asset.fimobiliario,
@@ -41,7 +41,7 @@ export default class AssetCollection implements AssetRepo {
         } else {
             console.log('ENTREI NO ELSE')
 
-            const doc = await this.collection().doc(asset.user).collection('assets').doc(asset.id).set({
+            const doc = await firebase.firestore().collection('users').doc(asset.user).collection('assets').doc(asset.id).set({
                 acoes: asset.acoes,
                 etf: asset.etf,
                 fimobiliario: asset.fimobiliario,
@@ -79,8 +79,8 @@ export default class AssetCollection implements AssetRepo {
     }
 
 
-    private collection() {
+   /*  private collection() {
         return firebase.firestore().collection('users').withConverter(this.#conversor)
-    }
+    } */
 
 }
