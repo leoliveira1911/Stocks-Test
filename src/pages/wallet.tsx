@@ -113,7 +113,7 @@ export default function Post() {
             shares,
             investedValue: `=FIXED(H${row + 1}*G${row + 1};2)`,
             current: `=FIXED(H${row + 1}*F${row + 1} ;2)`,
-            type: e.type,
+            type,
             range: `${userUID}!A${row + 1}:K${row + 1}`
         }
 

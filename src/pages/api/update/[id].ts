@@ -16,6 +16,7 @@ type SheetForm = {
     shares: number
     investedValue: string
     current: string
+    type: string
     range: any
 }
 
@@ -50,7 +51,7 @@ export default async function handler(
             requestBody: {
                 //DATA	COMPANY	TICKER	PROFIT_PERCENT	PROFIT_ABSOLUTE	PRICE	BUY_PRICE	SHARES	INVESTED_VALUE	CURRENT
                 values: [
-                    [body.date, body.company, body.ticker, body.profitPercent, body.profitAbsolute, body.price, body.buyPrice, body.shares, body.investedValue, body.current]
+                    [body.date, body.company, body.ticker, body.profitPercent, body.profitAbsolute, body.price, body.buyPrice, body.shares, body.investedValue, body.current , body.type]
                 ]
             }
         })

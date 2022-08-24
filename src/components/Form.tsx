@@ -97,7 +97,7 @@ export default function Form (props: FormProps) {
                         </div>
                         <div>
                         <input type="radio" id="commodities" name="type" value="commodities"onClick={()=>props.setType('commodities')}/>
-                        <label htmlFor="commodities">Fundo de ações</label>
+                        <label htmlFor="commodities">Commodities</label>
                         </div>
                     </div>
                     <div className={`

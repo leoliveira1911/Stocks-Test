@@ -18,6 +18,7 @@ export default function Layout(props: LayoutProps) {
         <RequireAuth>
         <div className={`
         flex
+        
         min-h-screen
         w-screen
         ${ctx.theme} 
@@ -25,6 +26,7 @@ export default function Layout(props: LayoutProps) {
             <NavBar />
 
             <div className={`
+            
             flex
             flex-col
             w-full

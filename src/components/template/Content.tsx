@@ -6,6 +6,7 @@ interface ContentProps {
 export default function Content(props: ContentProps) {
     return (
         <div className={`
+        min-h-screen
         flex 
         flex-col
         mt-7

@@ -1,5 +1,5 @@
 
-
+import useAppData from '../data/hook/useAppData'
 import React from "react";
 import { useState } from 'react'
 import { EditIcon, DeleteIcon, VisibleIcon } from '../icons'
@@ -20,6 +20,8 @@ interface TableFireProps {
 
 export default function TableFire(props: TableFireProps) {
     
+    const ctx = useAppData()
+    const theme = ctx.theme
     const [acao, setAcao] = useState(0)
     const [etf, setEtf] = useState(0)
     const [fii, setFii] = useState(0)
@@ -45,9 +47,9 @@ export default function TableFire(props: TableFireProps) {
 
             const options = {
                 is3D: true,
-                backgroundColor: 'rgb(31,41,55)',
-                legendTextStyle: { color: '#FFF' },
-                titleTextStyle: { color: '#FFF' },
+                backgroundColor: `${theme === 'dark' ? 'rgb(31,41,55)' : 'rgb(209,213,219)'}`,
+                legendTextStyle: { color: `${theme === 'dark' ? '#FFF' : '#000'}`},
+                titleTextStyle: { color: `${theme === 'dark' ? '#FFF' : '#000'}`},
 
             }
             return (
@@ -87,9 +89,9 @@ export default function TableFire(props: TableFireProps) {
             const options = {
 
                 is3D: true,
-                backgroundColor: 'rgb(31,41,55)',
-                legendTextStyle: { color: '#FFF' },
-                titleTextStyle: { color: '#FFF' },
+                backgroundColor: `${theme === 'dark' ? 'rgb(31,41,55)' : 'rgb(209,213,219)'}`,
+                legendTextStyle: { color: `${theme === 'dark' ? '#FFF' : '#000'}`},
+                titleTextStyle: { color: `${theme === 'dark' ? '#FFF' : '#000'}`},
 
             }
             return (
@@ -112,17 +114,17 @@ export default function TableFire(props: TableFireProps) {
     return (
 
         <div className={`
-        flex justify-center items-center w-full text-center
+        sm:flex flex-col md:flex-row  justify-center items-center w-full text-center
         `}>
             <div className={`
-        m-4 w-1/2 text-xl
+        m-4 sm:w-full md:w-1/2 text-xl
         `}>
                     <h1>Asset Allocation de referência</h1>
                     {renderAssetDataBase()} 
 
             </div>
                 <div className={`
-        m-4 w-1/2 text-xl
+        m-4 sm:w-full md:w-1/2 text-xl
         `}>
                     
                     <h1>Asset Allocation atual da carteira</h1>

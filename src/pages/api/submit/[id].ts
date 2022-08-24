@@ -28,6 +28,7 @@ export default async function handler(
     
     if (req.method === 'POST') {
         const body = req.body as SheetForm
+        
         try {
             const scopes = [
                 "https://www.googleapis.com/auth/drive",
@@ -42,7 +43,7 @@ export default async function handler(
             );
             const sheets = google.sheets({ version: 'v4', auth:client })
             const {id} = req.query
-            const range = `${id}!A1:J1`
+            const range = `${id}!A1:K1`
             const response = await sheets.spreadsheets.values.append({
                 spreadsheetId: process.env.NEXT_PUBLIC_SHEET_ID,
                 range,
