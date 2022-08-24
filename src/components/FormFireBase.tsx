@@ -47,37 +47,37 @@ export default function Form (props: FormProps) {
                         flex flex-col p-1 font-semibold
                     `}>
                         <label htmlFor='date'> Ações </label>
-                        <input placeholder="DD/MM/AAAA" className={`text-black rounded-md px-2 py-1`} value={date} onChange={e => {props.setDate(e.target.value) ; setDate(e.target.value)}} type="text" name="date" id="date" />
+                        <input placeholder="123" className={`text-black rounded-md px-2 py-1`} value={date} onChange={e => {props.setDate(e.target.value) ; setDate(e.target.value)}} type="text" name="date" id="date" />
                     </div>
                     <div className={`
                         flex flex-col p-1 font-semibold
                     `}>
                         <label htmlFor='company'> ETF </label>
-                        <input placeholder="Empresa ABC" className={`text-black rounded-md px-2 py-1`} required value={company} onChange={e => {props.setCompany(e.target.value) ; setCompany(e.target.value)}} type="text" name="company" id="company" />
+                        <input placeholder="123" className={`text-black rounded-md px-2 py-1`} required value={company} onChange={e => {props.setCompany(e.target.value) ; setCompany(e.target.value)}} type="text" name="company" id="company" />
                     </div>
                     <div className={`
                         flex flex-col p-1 font-semibold
                     `}>
                         <label htmlFor='ticker'> Fundo Imobiliário </label>
-                        <input placeholder="TICK3" className={`text-black rounded-md px-2 py-1`} required value={ticker} onChange={e => {props.setTicker(e.target.value) ; setTicker(e.target.value)}} type="text" name="ticker" id="ticker" />
+                        <input placeholder="123" className={`text-black rounded-md px-2 py-1`} required value={ticker} onChange={e => {props.setTicker(e.target.value) ; setTicker(e.target.value)}} type="text" name="ticker" id="ticker" />
                     </div>
                     <div className={`
                         flex flex-col p-1 font-semibold
                     `}>
                         <label htmlFor='buyPrice'> Fundo Multi Mercado </label>
-                        <input placeholder="99,99" className={`text-black rounded-md px-2 py-1`}  value={buyPrice} onChange={e => {props.setBuyPrice(e.target.value) ; setBuyPrice(e.target.value)}} type="text" name="buyPrice" id="buyPrice" />
+                        <input placeholder="123" className={`text-black rounded-md px-2 py-1`}  value={buyPrice} onChange={e => {props.setBuyPrice(e.target.value) ; setBuyPrice(e.target.value)}} type="text" name="buyPrice" id="buyPrice" />
                     </div>
                     <div className={`
                         flex flex-col p-1 font-semibold
                     `}>
                         <label htmlFor='shares'> Fundo de Ações </label>
-                        <input placeholder="100" className={`text-black rounded-md px-2 py-1`}  value={shares} onChange={e => {props.setShares(e.target.value) ; setShares(e.target.value)}} type="text" name="shares" id="shares" />
+                        <input placeholder="123" className={`text-black rounded-md px-2 py-1`}  value={shares} onChange={e => {props.setShares(e.target.value) ; setShares(e.target.value)}} type="text" name="shares" id="shares" />
                     </div>
                     <div className={`
                         flex flex-col p-1 font-semibold
                     `}>
                         <label htmlFor='shares'> Commodities </label>
-                        <input placeholder="100" className={`text-black rounded-md px-2 py-1`}  value={commodities} onChange={e => {props.setCommodities(e.target.value) ; setCommodities(e.target.value)}} type="text" name="shares" id="shares" />
+                        <input placeholder="123" className={`text-black rounded-md px-2 py-1`}  value={commodities} onChange={e => {props.setCommodities(e.target.value) ; setCommodities(e.target.value)}} type="text" name="shares" id="shares" />
                     </div>
                     <div className={`
                     flex justify-center
