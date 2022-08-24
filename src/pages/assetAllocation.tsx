@@ -52,9 +52,11 @@ export default function Settings() {
         setFimobiliario(0)
         setFacoes(0)
         setFmmercado(0)
+        setCommodities(0)
         
-        console.log('getAll chamada')
+        
       })
+      handleGet()
   
     } 
   
@@ -160,11 +162,13 @@ export default function Settings() {
         title='Asset Allocation'
         subtitle='Defina o Asset Allocation da sua carteira e acompanhe a distribuição do seu capital'
       >
-    
-        <TabelaFireBase assetAllocation={assets} stocks={[acoes,etf ,fimobiliario , fmmercado, facoes , commodities]} />
-        <div className={`
-        flex justify-center items-center flex-col
-        `} >
+        {addStock == 'hide' ? (
+          
+          <TabelaFireBase assetAllocation={assets} stocks={[acoes,etf ,fimobiliario , fmmercado, facoes , commodities]} />
+          ) : (null)}
+          <div className={`
+          flex justify-center items-center flex-col
+          `} >
         <Button label={'Definir Asset Allocation'} onClick={()=> {setAddStock(`${addStock == 'hide' ? 'show' : 'hide'}`) ; setUpdateStock('hide')} } />
 
         {addStock == 'show' ? (
