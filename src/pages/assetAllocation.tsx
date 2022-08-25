@@ -7,13 +7,15 @@ import AssetCollection from '../backend/db/AssetCollection'
 import useAuth from '../data/hook/useAuth'
 import Button from '../components/Button'
 import TabelaFireBase from '../components/TableFireBase'
-
+import Image  from 'next/image' 
+import loading from '../../public/images/loading.gif'
 
 
 export default function Settings() {
   const auth = useAuth()
   const user = auth.user?.uid
 
+  const [wait , setWait] = useState(true)
   const repo: AssetRepo = new AssetCollection()
   const [acoes, setAcoes] = useState(0)
   const [etf, setEtf] = useState(0)
@@ -44,6 +46,7 @@ export default function Settings() {
   }, [auth.user])
     
      function getAll(){
+      setWait(true)
       repo.getAll(user).then(assets => {
         setAssets(assets)
         console.log(assets)
@@ -53,8 +56,6 @@ export default function Settings() {
         setFacoes(0)
         setFmmercado(0)
         setCommodities(0)
-        
-        
       })
       handleGet()
   
@@ -151,8 +152,40 @@ export default function Settings() {
     })
 
     }
+    setWait(false)
   }
 
+  function renderLoading() {
+    return (
+        <div className={`
+        flex justify-center items-center h-screen 
+        `}>
+            <Image src={loading}/>
+        </div>
+    )
+}
+
+  function renderContent() {
+    return (
+      <>
+      {addStock == 'hide' ? ( 
+        <TabelaFireBase assetAllocation={assets} stocks={[acoes,etf ,fimobiliario , fmmercado, facoes , commodities]} />
+        ) : (null)}
+        
+        <div className={`
+        flex justify-center items-center flex-col
+        `} >
+          
+      <Button label={'Definir Asset Allocation'} onClick={()=> {setAddStock(`${addStock == 'hide' ? 'show' : 'hide'}`) ; setUpdateStock('hide')} } />
+
+      {addStock == 'show' ? (
+        <FormFireBase action='Asset Allocation' submit={()=> saveAsset(new Asset(user, acoes, etf, fimobiliario, fmmercado, facoes, commodities))} setBuyPrice={setFmmercado} setCompany={setEtf} setDate={setAcoes} setShares={setFacoes} setTicker={setFimobiliario} setCommodities={setCommodities} />
+        
+        ) : (null)}
+      </div>
+      </>
+    )
+  }
   
   return (
     <div className={`
@@ -162,20 +195,8 @@ export default function Settings() {
         title='Asset Allocation'
         subtitle='Defina o Asset Allocation da sua carteira e acompanhe a distribuição do seu capital'
       >
-        {addStock == 'hide' ? (
-          
-          <TabelaFireBase assetAllocation={assets} stocks={[acoes,etf ,fimobiliario , fmmercado, facoes , commodities]} />
-          ) : (null)}
-          <div className={`
-          flex justify-center items-center flex-col
-          `} >
-        <Button label={'Definir Asset Allocation'} onClick={()=> {setAddStock(`${addStock == 'hide' ? 'show' : 'hide'}`) ; setUpdateStock('hide')} } />
-
-        {addStock == 'show' ? (
-          <FormFireBase action='Asset Allocation' submit={()=> saveAsset(new Asset(user, acoes, etf, fimobiliario, fmmercado, facoes, commodities))} setBuyPrice={setFmmercado} setCompany={setEtf} setDate={setAcoes} setShares={setFacoes} setTicker={setFimobiliario} setCommodities={setCommodities} />
-          
-          ) : (null)}
-        </div>
+        {wait == true ? (renderLoading()) : (renderContent())}
+        
 
         
         
