@@ -36,7 +36,7 @@ export default function Post() {
         //DATA	COMPANY	TICKER	PROFIT_PERCENT	PROFIT_ABSOLUTE	PRICE	BUY_PRICE	SHARES	INVESTED_VALUE	CURRENT
         const form = {
             date,
-            company,
+            company:`=GOOGLEFINANCE((C${values.rowCount + 2});"name")`,
             ticker,
             profitPercent: `=ROUND((G${values.rowCount + 2}-F${values.rowCount + 2})/G${values.rowCount + 2}*(-100);2)`,
             profitAbsolute: `=FIXED((F${values.rowCount + 2}-G${values.rowCount + 2})*H${values.rowCount + 2};2)`,
@@ -104,7 +104,7 @@ export default function Post() {
 
         const form = {
             date,
-            company,
+            company: `=FGOOGLEFINANCE(C${row + 1});"name")`,
             ticker,
             profitPercent: `=FIXED((G${row + 1}-F${row + 1})/G${row + 1}*(-100);2)`,
             profitAbsolute: `=FIXED((F${row + 1}-G${row + 1})*H${row + 1};2)`,

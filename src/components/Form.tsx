@@ -48,12 +48,12 @@ export default function Form (props: FormProps) {
                         <label htmlFor='date'> Data de compra</label>
                         <input placeholder="DD/MM/AAAA" className={`text-black rounded-md px-2 py-1`} required value={date} onChange={e => {props.setDate(e.target.value) ; setDate(e.target.value)}} type="text" name="date" id="date" />
                     </div>
-                    <div className={`
+                    {/* <div className={`
                         flex flex-col p-1 font-semibold
                     `}>
                         <label htmlFor='company'> Empresa</label>
                         <input placeholder="Empresa ABC" className={`text-black rounded-md px-2 py-1`} required value={company} onChange={e => {props.setCompany(e.target.value) ; setCompany(e.target.value)}} type="text" name="company" id="company" />
-                    </div>
+                    </div> */}
                     <div className={`
                         flex flex-col p-1 font-semibold
                     `}>
@@ -76,27 +76,27 @@ export default function Form (props: FormProps) {
                         flex flex-col p-1 font-semibold
                     `}>
                         <div>
-                        <input type="radio" id="acao" name="type" value="acao" onClick={()=>props.setType('acao')}/>
+                        <input className={`mx-2`} type="radio" id="acao" name="type" value="acao" onClick={()=>props.setType('acao')}/>
                         <label htmlFor="html">Ação</label> 
                         </div>
                         <div>
-                        <input type="radio" id="etf" name="type" value="etf" onClick={()=>props.setType('etf')}/>
+                        <input className={`mx-2`} type="radio" id="etf" name="type" value="etf" onClick={()=>props.setType('etf')}/>
                         <label htmlFor="css">ETF</label>
                         </div>
                         <div>
-                        <input type="radio" id="fii" name="type" value="fii" onClick={()=>props.setType('fii')}/>
+                        <input className={`mx-2`} type="radio" id="fii" name="type" value="fii" onClick={()=>props.setType('fii')}/>
                         <label htmlFor="javascript">FII</label>
                         </div>
                         <div>
-                        <input type="radio" id="fmmercado" name="type" value="fmmercado"onClick={()=>props.setType('fmmercado')}/>
+                        <input className={`mx-2`} type="radio" id="fmmercado" name="type" value="fmmercado"onClick={()=>props.setType('fmmercado')}/>
                         <label htmlFor="javascript">Fundo Multi Mercado</label>
                         </div>
                         <div>
-                        <input type="radio" id="facao" name="type" value="facao"onClick={()=>props.setType('facao')}/>
+                        <input className={`mx-2`} type="radio" id="facao" name="type" value="facao"onClick={()=>props.setType('facao')}/>
                         <label htmlFor="javascript">Fundo de ações</label>
                         </div>
                         <div>
-                        <input type="radio" id="commodities" name="type" value="commodities"onClick={()=>props.setType('commodities')}/>
+                        <input className={`mx-2`} type="radio" id="commodities" name="type" value="commodities"onClick={()=>props.setType('commodities')}/>
                         <label htmlFor="commodities">Commodities</label>
                         </div>
                     </div>
