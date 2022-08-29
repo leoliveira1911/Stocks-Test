@@ -45,7 +45,7 @@ export default function useWallet() {
             type,
         };
 
-        const response = await fetch(`/api/submit/${userUID}`, {
+        const response = await fetch(`/api/googleSheets/submit/${userUID}`, {
             method: "POST",
             headers: {
                 Accept: "application/json",
@@ -70,7 +70,7 @@ export default function useWallet() {
     };
 
     const handleGet = async () => {
-        const response = await fetch(`/api/get/${userUID}`, {
+        const response = await fetch(`/api/googleSheets/get/${userUID}`, {
             method: "GET",
             headers: {
                 Accept: "application/json",
@@ -111,7 +111,7 @@ export default function useWallet() {
             range: `${userUID}!A${row + 1}:K${row + 1}`,
         };
 
-        const response = await fetch(`/api/update/${userUID}`, {
+        const response = await fetch(`/api/googleSheets/update/${userUID}`, {
             method: "PUT",
             headers: {
                 Accept: "application/json",
@@ -141,7 +141,7 @@ export default function useWallet() {
             range: `${e + 1}`,
         };
 
-        const response = await fetch(`/api/delete/${userUID}`, {
+        const response = await fetch(`/api/googleSheets/delete/${userUID}`, {
             method: "DELETE",
             headers: {
                 Accept: "application/json",

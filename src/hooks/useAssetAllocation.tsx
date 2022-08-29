@@ -70,7 +70,7 @@ export default function useAssetAllocation() {
   }
 
   const handleGet = async () => {
-    const response = await fetch(`/api/get/${user}`, {
+    const response = await fetch(`/api/googleSheets/get/${user}`, {
       method: "GET",
       headers: {
         Accept: "application/json",
