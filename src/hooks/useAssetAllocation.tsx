@@ -24,7 +24,6 @@ export default function useAssetAllocation() {
   const [commodities, setCommodities] = useState(0);
   const [stocks, setStocks] = useState();
   const [asset, setAsset] = useState<Asset>(Asset.empty());
-  //const [user , setUser] = useState(auth.user ? auth.user.uid : '')
   const [assets, setAssets] = useState<Asset[]>([]);
   const [addStock, setAddStock] = useState("hide");
   const [updateStock, setUpdateStock] = useState("hide");
